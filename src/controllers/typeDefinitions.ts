@@ -1,11 +1,13 @@
 // Request object definitions
-export interface ProductSaveRequest {
+export interface MarkersSaveRequest {
 	id?: string;
-	count: number;
-	lookupCode: string;
-	price: number;
-	quantity_sold: number;
-	total_sold: number;
+	MarkerID: number;
+	Latitude: number;
+	Temperature: number;
+	location: string;
+	Longitude: number;
+	ArrivalTime: Date;
+	precipChance: number;
 }
 
 export interface CartSaveRequest {
@@ -35,13 +37,15 @@ export interface Params {
 
 // Response object definitions
 // Response data object definitions
-export interface Product {
+export interface Markers {
 	id: string;
-	count: number;
-	createdOn: string;
-	lookupCode: string;
-	price: number;
-	total_sold: number;
+	Temperature: number;
+	ArrivalTime: string;
+	location: string;
+	Latitude: number;
+	Longitude: number;
+	precipChance: number;
+	MarkerID: number;
 }
 
 export interface Cart {
@@ -71,7 +75,7 @@ export interface ApiResponse {
 }
 
 export interface ProductSaveResponse extends ApiResponse {
-	product: Product;
+	markers: Markers;
 }
 export interface EmployeeSaveResponse extends ApiResponse {
 	employee: Employee;

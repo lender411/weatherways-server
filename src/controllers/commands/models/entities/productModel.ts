@@ -1,63 +1,67 @@
 import Sequelize from "sequelize";
 import { DatabaseConnection } from "../databaseConnection";
 import { DatabaseTableName } from "../constants/databaseTableNames";
-import { ProductFieldName } from "../constants/fieldNames/productFieldNames";
+import { MarkersFieldName } from "../constants/fieldNames/productFieldNames";
 import { Model, DataTypes, InitOptions, ModelAttributes, ModelAttributeColumnOptions } from "sequelize";
 
 
-export class ProductModel extends Model {
-	public count!: number;
-	public lookupCode!: string;
-	public price!: number;
-	public total_sold!: number;
+export class MarkersModel extends Model {
+	public MarkerID!: number;
+	public Temperature!: number;
+	public precipChance!: number;
+	public Latitude!: number;
+	public Longitude!: number;
+	public location!: string;
 	public readonly id!: string;
-	public readonly createdOn!: Date;
+	public readonly ArrivalTime!: Date;
 
 }
 
-ProductModel.init(
+MarkersModel.init(
 	<ModelAttributes>{
 		id: <ModelAttributeColumnOptions>{
-			field: ProductFieldName.ID,
+			field: MarkersFieldName.ID,
 			type: DataTypes.UUID,
 			autoIncrement: true,
 			primaryKey: true
 
 		},
-		count: <ModelAttributeColumnOptions>{
-			field: ProductFieldName.Count,
+		MarkerID: <ModelAttributeColumnOptions>{
+			field: MarkersFieldName.MarkerID,
 			type: DataTypes.INTEGER,
-			allowNull: true,
-			defaultValue: 0
+			primaryKey: true
 		},
-		createdOn: <ModelAttributeColumnOptions>{
-			field: ProductFieldName.CreatedOn,
+		ArrivalTime: <ModelAttributeColumnOptions>{
+			field: MarkersFieldName.ArrivalTime,
 			type: new DataTypes.DATE(),
 			allowNull: true
 		},
-		lookupCode: <ModelAttributeColumnOptions>{
-			field: ProductFieldName.LookupCode,
-			type: new DataTypes.STRING(32),
-			allowNull: false,
-			defaultValue: ""
-		},
-		price: <ModelAttributeColumnOptions>{
-			field: ProductFieldName.Price,
-			type: new DataTypes.DECIMAL,
-			allowNull: true,
-			defaultValue: 0
-		},
-		total_sold: <ModelAttributeColumnOptions>{
-			field: ProductFieldName.Sold,
+		Temperature: <ModelAttributeColumnOptions>{
+			field: MarkersFieldName.Temperature,
 			type: new DataTypes.INTEGER,
-			allowNull: true,
-			defaultValue: 0
+			allowNull: false,
+		},
+		Latitude: <ModelAttributeColumnOptions>{
+			field: MarkersFieldName.Latitude,
+			type: new DataTypes.DECIMAL,
+		},
+		Longitude: <ModelAttributeColumnOptions>{
+			field: MarkersFieldName.Longitude,
+			type: new DataTypes.DECIMAL,
+		},
+		precipChance: <ModelAttributeColumnOptions>{
+			field: MarkersFieldName.precipChance,
+			type: new DataTypes.INTEGER
+		},
+		location: <ModelAttributeColumnOptions>{
+			field: MarkersFieldName.location,
+			type: new DataTypes.STRING(32)
 		}
 	}, <InitOptions>{
 		timestamps: false,
 		freezeTableName: true,
 		sequelize: DatabaseConnection,
-		tableName: DatabaseTableName.PRODUCT
+		tableName: DatabaseTableName.MARKERS
 	});
 
 
@@ -91,44 +95,44 @@ export const queryAll = async (): Promise<ProductModel[]> => {
 };*/
 const Op = Sequelize.Op;
 
-export const queryById = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<ProductModel | null> => {
-	return ProductModel.findOne(<Sequelize.FindOptions>{
+export const queryById = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkersModel | null> => {
+	return MarkersModel.findOne(<Sequelize.FindOptions>{
 		transaction: queryTransaction,
-		where: <Sequelize.WhereOptions>{ id: id }
+		where: <Sequelize.WhereAttributeHash>{ id: id }
 	});
 };
 
-export const queryByLookupCode = async (lookupCode: string, queryTransaction?: Sequelize.Transaction): Promise<ProductModel | null> => {
-	return ProductModel.findOne(<Sequelize.FindOptions>{
+export const queryByLookupCode = async (MarkerID: number, queryTransaction?: Sequelize.Transaction): Promise<MarkersModel | null> => {
+	return MarkersModel.findOne(<Sequelize.FindOptions>{
 		transaction: queryTransaction,
-		where: <Sequelize.WhereOptions>{ lookupCode: lookupCode }
+		where: <Sequelize.WhereOptions>{ MarkerID: MarkerID }
 	});
 };
 
-export const queryAll = async (): Promise<ProductModel[]> => {
-	return ProductModel.findAll(<Sequelize.FindOptions>{
-		order: [ [ProductFieldName.CreatedOn, "ASC"] ]
+export const queryAll = async (): Promise<MarkersModel[]> => {
+	return MarkersModel.findAll(<Sequelize.FindOptions>{
+		id: [ [MarkersFieldName.ArrivalTime, "ASC"] ]
 	});
 };
 
-export const searchAll = async (query: string): Promise<ProductModel[]> => {
-	return ProductModel.findAll({
+export const searchAll = async (query: string): Promise<MarkersModel[]> => {
+	return MarkersModel.findAll({
 		where: {
-			lookupCode: { [Op.like]: query + "%" }
+			MarkerID: { [Op.like]: query + "%" }
 		}
 	});
 };
 
-export const create = async (newProduct: ProductModel, createTransaction?: Sequelize.Transaction): Promise<ProductModel> => {
-	return ProductModel.create(
-		newProduct,
+export const create = async (newMarker: MarkersModel, createTransaction?: Sequelize.Transaction): Promise<MarkersModel> => {
+	return MarkersModel.create(
+		newMarker,
 		<Sequelize.CreateOptions>{
 			transaction: createTransaction
 		});
 };
 
-export const destroy = async (productListEntry: ProductModel, destroyTransaction?: Sequelize.Transaction): Promise<void> => {
-	return productListEntry.destroy(
+export const destroy = async (markerListEntry: MarkersModel, destroyTransaction?: Sequelize.Transaction): Promise<void> => {
+	return markerListEntry.destroy(
 		<Sequelize.InstanceDestroyOptions>{
 			transaction: destroyTransaction
 		});

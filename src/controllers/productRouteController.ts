@@ -6,11 +6,11 @@ import * as ProductCreateCommand from "./commands/products/productCreateCommand"
 import * as ProductDeleteCommand from "./commands/products/productDeleteCommand";
 import * as ProductUpdateCommand from "./commands/products/productUpdateCommand";
 import * as ProductSearchCommand from "./commands/products/productSearchCommand";
-import { CommandResponse, Product, ProductSaveRequest } from "./typeDefinitions";
+import { CommandResponse, Markers, MarkersSaveRequest } from "./typeDefinitions";
 
 export const queryProducts = async (req: restify.Request, res: restify.Response, next: restify.Next) => {
 	ProductsQuery.query()
-		.then((productsQueryCommandResponse: CommandResponse<Product[]>) => {
+		.then((productsQueryCommandResponse: CommandResponse<Markers[]>) => {
 			res.send(
 				productsQueryCommandResponse.status,
 				productsQueryCommandResponse.data);
@@ -27,7 +27,7 @@ export const queryProducts = async (req: restify.Request, res: restify.Response,
 
 export const searchProducts = async (req: restify.Request, res: restify.Response, next: restify.Next) => {
 	ProductSearchCommand.search(req.params[ParameterLookup.ProductLookupCode])
-		.then((productsQueryCommandResponse: CommandResponse<Product[]>) => {
+		.then((productsQueryCommandResponse: CommandResponse<Markers[]>) => {
 			res.send(
 				productsQueryCommandResponse.status,
 				productsQueryCommandResponse.data);
@@ -44,7 +44,7 @@ export const searchProducts = async (req: restify.Request, res: restify.Response
 
 export const queryProductById = async (req: restify.Request, res: restify.Response, next: restify.Next) => {
 	ProductQuery.queryById(req.params[ParameterLookup.ProductId])
-		.then((productQueryCommandResponse: CommandResponse<Product>) => {
+		.then((productQueryCommandResponse: CommandResponse<Markers>) => {
 			res.send(
 				productQueryCommandResponse.status,
 				productQueryCommandResponse.data);
@@ -61,7 +61,7 @@ export const queryProductById = async (req: restify.Request, res: restify.Respon
 
 export const queryProductByLookupCode = async (req: restify.Request, res: restify.Response, next: restify.Next) => {
 	ProductQuery.queryByLookupCode(req.params[ParameterLookup.ProductLookupCode])
-		.then((productQueryCommandResponse: CommandResponse<Product>) => {
+		.then((productQueryCommandResponse: CommandResponse<Markers>) => {
 			res.send(
 				productQueryCommandResponse.status,
 				productQueryCommandResponse.data);
@@ -80,10 +80,10 @@ const saveProduct = async (
 	req: restify.Request,
 	res: restify.Response,
 	next: restify.Next,
-	performSave: (productSaveRequest: ProductSaveRequest) => Promise<CommandResponse<Product>>): Promise<void> => {
+	performSave: (productSaveRequest: MarkersSaveRequest) => Promise<CommandResponse<Markers>>): Promise<void> => {
 
 	performSave(req.body)
-		.then((productSaveCommandResponse: CommandResponse<Product>) => {
+		.then((productSaveCommandResponse: CommandResponse<Markers>) => {
 			res.send(
 				productSaveCommandResponse.status,
 				productSaveCommandResponse.data);

@@ -3,23 +3,23 @@ import * as Helper from "../helpers/helper";
 import { ErrorCodeLookup } from "../../lookups/stringLookup";
 import * as DatabaseConnection from "../models/databaseConnection";
 import * as ProductRepository from "../models/entities/productModel";
-import { CommandResponse, Product, ProductSaveRequest } from "../../typeDefinitions";
-import { ProductModel } from "../models/entities/productModel";
+import { CommandResponse, Markers, MarkersSaveRequest } from "../../typeDefinitions";
+import { MarkersModel } from "../models/entities/productModel";
 
-const validateSaveRequest = (saveProductRequest: ProductSaveRequest): CommandResponse<Product> => {
-	const validationResponse: CommandResponse<Product> =
-		<CommandResponse<Product>>{ status: 200 };
+const validateSaveRequest = (saveProductRequest: MarkersSaveRequest): CommandResponse<Markers> => {
+	const validationResponse: CommandResponse<Markers> =
+		<CommandResponse<Markers>>{ status: 200 };
 
 	if ((saveProductRequest.id == null) || (saveProductRequest.id.trim() === "")) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2025;
-	} else if ((saveProductRequest.lookupCode == null) || (saveProductRequest.lookupCode.trim() === "")) {
+	} else if ((saveProductRequest.location == null) || (saveProductRequest.location.trim() === "")) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2026;
-	} else if ((saveProductRequest.count == null) || isNaN(saveProductRequest.count)) {
+	} else if ((saveProductRequest.MarkerID == null) || isNaN(saveProductRequest.MarkerID)) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2027;
-	} else if (saveProductRequest.count < 0) {
+	} else if (saveProductRequest.MarkerID < 0) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2028;
 	}
@@ -27,8 +27,8 @@ const validateSaveRequest = (saveProductRequest: ProductSaveRequest): CommandRes
 	return validationResponse;
 };
 
-export const execute = async (saveProductRequest: ProductSaveRequest): Promise<CommandResponse<Product>> => {
-	const validationResponse: CommandResponse<Product> = validateSaveRequest(saveProductRequest);
+export const execute = async (saveProductRequest: MarkersSaveRequest): Promise<CommandResponse<Markers>> => {
+	const validationResponse: CommandResponse<Markers> = validateSaveRequest(saveProductRequest);
 	if (validationResponse.status !== 200) {
 		return Promise.reject(validationResponse);
 	}
@@ -36,52 +36,48 @@ export const execute = async (saveProductRequest: ProductSaveRequest): Promise<C
 	let updateTransaction: Sequelize.Transaction;
 
 	return DatabaseConnection.startTransaction()
-		.then((startedTransaction: Sequelize.Transaction): Promise<ProductModel | null> => {
+		.then((startedTransaction: Sequelize.Transaction): Promise<MarkersModel | null> => {
 			updateTransaction = startedTransaction;
 
 			return ProductRepository.queryById(<string>saveProductRequest.id, updateTransaction);
-		}).then((queriedProduct: (ProductModel | null)): Promise<ProductModel> => {
+		}).then((queriedProduct: (MarkersModel | null)): Promise<MarkersModel> => {
 			if (queriedProduct == null) {
-				return Promise.reject(<CommandResponse<Product>>{
+				return Promise.reject(<CommandResponse<Markers>>{
 					status: 404,
 					message: ErrorCodeLookup.EC1001
 				});
 			}
+			else
+				return queriedProduct.update(
+				<Object>{
 
-			if (saveProductRequest.quantity_sold > 0)
-				return queriedProduct.update(
-				<Object>{
-					count: queriedProduct.count - saveProductRequest.quantity_sold,
-					total_sold: queriedProduct.total_sold + saveProductRequest.quantity_sold // count here is quantity of product sold
-				},
-				<Sequelize.InstanceUpdateOptions>{ transaction: updateTransaction}); 
-			else 
-				return queriedProduct.update(
-				<Object>{
-					count: saveProductRequest.count,
-					lookupCode: saveProductRequest.lookupCode,
-					price: saveProductRequest.price
+					Longitude: saveProductRequest.Longitude,
+					Latitude: saveProductRequest.Latitude,
+					ArrivalTime: saveProductRequest.ArrivalTime
 				},
 				<Sequelize.InstanceUpdateOptions>{ transaction: updateTransaction });
-		}).then((updatedProduct: ProductModel): Promise<CommandResponse<Product>> => {
+		}).then((updatedProduct: MarkersModel): Promise<CommandResponse<Markers>> => {
 			updateTransaction.commit();
 
-			return Promise.resolve(<CommandResponse<Product>>{
+			return Promise.resolve(<CommandResponse<Markers>>{
 				status: 200,
-				data: <Product>{
+				data: <Markers>{
 					id: updatedProduct.id,
-					count: updatedProduct.count,
-					lookupCode: updatedProduct.lookupCode,
-					createdOn: Helper.formatDate(updatedProduct.createdOn),
-					total_sold: updatedProduct.total_sold
+					MarkerID: updatedProduct.MarkerID,
+					Latitude:updatedProduct.Latitude,
+					ArrivalTime: Helper.formatDate(updatedProduct.ArrivalTime),
+					Longitude:updatedProduct.Longitude,
+					Temperature: updatedProduct.Temperature,
+					precipChance: updatedProduct.precipChance,
+					location: updatedProduct.location
 				}
 			});
-		}).catch((error: any): Promise<CommandResponse<Product>> => {
+		}).catch((error: any): Promise<CommandResponse<Markers>> => {
 			if (updateTransaction != null) {
 				updateTransaction.rollback();
 			}
 
-			return Promise.reject(<CommandResponse<Product>>{
+			return Promise.reject(<CommandResponse<Markers>>{
 				status: (error.status || 500),
 				message: (error.messsage || ErrorCodeLookup.EC1002)
 			});

@@ -1,8 +1,10 @@
-export enum ProductFieldName {
+export enum MarkersFieldName {
+	location = "location",
+	ArrivalTime = "ArrivalTime",
 	ID = "id",
-	Count = "count",
-	CreatedOn = "createdon",
-	LookupCode = "lookupcode",
-	Price = "price",
-	Sold = "total_sold"
+	MarkerID = "MarkerID",
+	Temperature = "Temperature",
+	precipChance = "precipChance",
+	Latitude = "Latitude",
+	Longitude = "Longitude"
 }
