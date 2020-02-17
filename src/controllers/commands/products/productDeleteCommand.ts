@@ -2,8 +2,8 @@ import Sequelize from "sequelize";
 import { CommandResponse } from "../../typeDefinitions";
 import { ErrorCodeLookup } from "../../lookups/stringLookup";
 import * as DatabaseConnection from "../models/databaseConnection";
-import * as ProductRepository from "../models/entities/productModel";
-import { ProductModel } from "../models/entities/productModel";
+import * as MarkersRepository from "../models/entities/productModel";
+import { MarkersModel } from "../models/entities/productModel";
 
 export let execute = (productId?: string): Promise<CommandResponse<void>> => {
 	if ((productId == null) || (productId.trim() === "")) {
@@ -13,16 +13,16 @@ export let execute = (productId?: string): Promise<CommandResponse<void>> => {
 	let deleteTransaction: Sequelize.Transaction;
 
 	return DatabaseConnection.startTransaction()
-		.then((startedTransaction: Sequelize.Transaction): Promise<ProductModel | null> => {
+		.then((startedTransaction: Sequelize.Transaction): Promise<MarkersModel | null> => {
 			deleteTransaction = startedTransaction;
 
-			return ProductRepository.queryById(productId, deleteTransaction);
-		}).then((queriedProduct: (ProductModel | null)): Promise<void> => {
+			return MarkersRepository.queryById(productId, deleteTransaction);
+		}).then((queriedProduct: (MarkersModel | null)): Promise<void> => {
 			if (queriedProduct == null) {
 				return Promise.resolve();
 			}
 
-			return ProductRepository.destroy(queriedProduct, deleteTransaction);
+			return MarkersRepository.destroy(queriedProduct, deleteTransaction);
 		}).then((): Promise<CommandResponse<void>> => {
 			deleteTransaction.commit();
 
