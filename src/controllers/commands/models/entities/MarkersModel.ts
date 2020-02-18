@@ -64,35 +64,6 @@ MarkersModel.init(
 		tableName: DatabaseTableName.MARKERS
 	});
 
-
-// Database interaction
-/*export const queryById = async (
-	id: string,
-	queryTransaction?: Sequelize.Transaction
-): Promise<ProductModel | null> => {
-
-	return ProductModel.findOne(<Sequelize.FindOptions>{
-		transaction: queryTransaction,
-		where: <Sequelize.WhereAttributeHash>{ id: id }
-	});
-};
-
-export const queryByLookupCode = async (
-	lookupCode: string,
-	queryTransaction?: Sequelize.Transaction
-): Promise<ProductModel | null> => {
-
-	return ProductModel.findOne(<Sequelize.FindOptions>{
-		transaction: queryTransaction,
-		where: <Sequelize.WhereAttributeHash>{ lookupCode: lookupCode }
-	});
-};
-
-export const queryAll = async (): Promise<ProductModel[]> => {
-	return ProductModel.findAll(<Sequelize.FindOptions>{
-		order: [ [ ProductFieldName.CreatedOn, "ASC" ] ]
-	});
-};*/
 const Op = Sequelize.Op;
 
 export const queryById = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkersModel | null> => {
@@ -102,7 +73,7 @@ export const queryById = async (id: string, queryTransaction?: Sequelize.Transac
 	});
 };
 
-export const queryByLookupCode = async (MarkerID: number, queryTransaction?: Sequelize.Transaction): Promise<MarkersModel | null> => {
+export const queryByMarkerID = async (MarkerID: number, queryTransaction?: Sequelize.Transaction): Promise<MarkersModel | null> => {
 	return MarkersModel.findOne(<Sequelize.FindOptions>{
 		transaction: queryTransaction,
 		where: <Sequelize.WhereOptions>{ MarkerID: MarkerID }

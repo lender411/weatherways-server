@@ -2,9 +2,9 @@ import Sequelize from "sequelize";
 import * as Helper from "../helpers/helper";
 import { ErrorCodeLookup } from "../../lookups/stringLookup";
 import * as DatabaseConnection from "../models/databaseConnection";
-import * as ProductRepository from "../models/entities/productModel";
+import * as MarkersRepository from "../models/entities/MarkersModel";
 import { CommandResponse, Markers, MarkersSaveRequest } from "../../typeDefinitions";
-import { MarkersModel } from "../models/entities/productModel";
+import { MarkersModel } from "../models/entities/MarkersModel";
 
 const validateSaveRequest = (saveMarkersRequest: MarkersSaveRequest): CommandResponse<Markers> => {
 	const validationResponse: CommandResponse<Markers> =
@@ -33,7 +33,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 		return Promise.reject(validationResponse);
 	}
 
-	const productToCreate: MarkersModel = <MarkersModel>{
+	const markerToCreate: MarkersModel = <MarkersModel>{
 		id:saveMarkersRequest.id,
 		Temperature: saveMarkersRequest.Temperature,
 		MarkerID: saveMarkersRequest.MarkerID,
@@ -51,37 +51,36 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 		.then((createdTransaction: Sequelize.Transaction): Promise<MarkersModel | null> => {
 			createTransaction = createdTransaction;
 
-			return ProductRepository.queryByLookupCode( 
+			return MarkersRepository.queryByMarkerID(
 				saveMarkersRequest.MarkerID,
 				createTransaction);
-		}).then((existingProduct: (MarkersModel | null)): Promise<MarkersModel> => {
-			if (existingProduct != null) {
+		}).then((existingMarker: (MarkersModel | null)): Promise<MarkersModel> => {
+			if (existingMarker != null) {
 				return Promise.reject(<CommandResponse<Markers>>{
 					status: 409,
 					message: ErrorCodeLookup.EC2029
 				});
 			}
 
-			// return ProductRepository.create(productToCreate, createTransaction);
 			return MarkersModel.create(
-				productToCreate,
+				markerToCreate,
 				<Sequelize.CreateOptions>{
 					transaction: createTransaction
 				});
-		}).then((createdProduct: MarkersModel): Promise<CommandResponse<Markers>> => {
+		}).then((createdMarker: MarkersModel): Promise<CommandResponse<Markers>> => {
 			createTransaction.commit();
 
 			return Promise.resolve(<CommandResponse<Markers>>{
 				status: 201,
 				data: <Markers>{
-					id: createdProduct.id,
-					MarkerID: createdProduct.MarkerID,
-					location: createdProduct.location,
-					ArrivalTime: Helper.formatDate(createdProduct.ArrivalTime),
-					Longitude: createdProduct.Longitude,
-					Latitude: createdProduct.Latitude,
-					Temperature: createdProduct.Temperature,
-					precipChance: createdProduct.precipChance
+					id: createdMarker.id,
+					MarkerID: createdMarker.MarkerID,
+					location: createdMarker.location,
+					ArrivalTime: Helper.formatDate(createdMarker.ArrivalTime),
+					Longitude: createdMarker.Longitude,
+					Latitude: createdMarker.Latitude,
+					Temperature: createdMarker.Temperature,
+					precipChance: createdMarker.precipChance
 				}
 			});
 		}).catch((error: any): Promise<CommandResponse<Markers>> => {

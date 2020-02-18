@@ -1,9 +1,6 @@
 export enum ParameterLookup {
-	ProductId = "productId",
-	ProductLookupCode = "productLookupCode",
-	EmployeeId = "employeeId",
-	Id = "id",
-	CartId = "cartId"
+	id = "id",
+	MarkerID = "MarkerID",
 }
 
 export enum RouteLookup {
@@ -11,28 +8,18 @@ export enum RouteLookup {
 	API = "/api",
 	Test = "/test",
 
-	// Product
-	Product = "/product",
-	ByLookupCode = "/bylookupcode",
+	// Markers
+	Markers = "/markers",
+	ByMarkerID = "/byMarkerID",
 
-	// Employee
-	Employee = "/employee",
-
-	// Cart
-	Cart = "/cart",
-	ByProductId = "/byproductid",
-	ByCartId = "/bycartid",
 
 	// Search
 	Search = "/search",
 
 	// Parameters
-	ProductSearchQuery = "/:search",
-	ProductIdParameter = "/:productId",
-	ProductLookupCodeParameter = "/:productLookupCode",
-	EmployeeIdParameter = "/:employeeId",
-	CartIdParameter = "/:cartId",
-	ProductIdParameterAndCartIdParameter = "/:productId&:cartId"
+	MarkersSearchQuery = "/:search",
+	idParameter = "/:id",
+	MarkersIdParameter = "/:MarkersID",
 	// End parameters
 	// End product
 	// End API routing
@@ -41,21 +28,11 @@ export enum RouteLookup {
 // Error codes
 export enum ErrorCodeLookup {
 	// Database
-	// Database - product
-	EC1001 = "Product was not found.",
-	EC1001B = "Cart was not found.",
-	EC1002 = "Unable to save product.",
-	EC1002B = "Unable to save cart.",
-	EC1003 = "Unable to delete product.",
-	EC1003B = "Unable to delete cart.",
+	// Database - Markers
+	EC1001 = "Marker was not found.",
+	EC1002 = "Unable to save marker.",
+	EC1003 = "Unable to delete marker.",
 	// End database - product
-
-	// Database - employee
-	EC1004 = "Employee was not found.",
-	EC1005 = "Unable to save employee.",
-	EC1006 = "Unable to delete employee.",
-	// End database - employee
-	// End database
 
 	// General
 	// General - product
@@ -71,21 +48,5 @@ export enum ErrorCodeLookup {
 	EC2029 = "Conflict on parameter: lookupcode.",
 	EC2028B = "Product price cannot be negative",
 	// End general - product
-
-	// General - employee
-	EC2003 = "Unable to retrieve employee listing.",
-	EC2004 = "Unable to retrieve employee details",
-	EC2030 = "The provided employee record ID is not valid.",
-	EC2031 = "Please provide a valid employee ID.",
-	EC2032 = "Please provide a valid active state.",
-	EC2033 = "Employee ID may not be negative.",
-	EC2034 = "Please provide a valid manager.",
-	EC2035 = "Manager cannot be negative.",
-	EC2036 = "The provided first name is not valid.",
-	EC2037 = "The provided last name is not valid.",
-	EC2038 = "The provided password is not valid",
-	EC2039 = "Conflict of parameter: ID"
-	// End genenral - employee
-	// End general
 }
 // End error codes

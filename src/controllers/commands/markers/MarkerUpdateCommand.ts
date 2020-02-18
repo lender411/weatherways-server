@@ -2,24 +2,24 @@ import Sequelize from "sequelize";
 import * as Helper from "../helpers/helper";
 import { ErrorCodeLookup } from "../../lookups/stringLookup";
 import * as DatabaseConnection from "../models/databaseConnection";
-import * as ProductRepository from "../models/entities/productModel";
+import * as MarkersRepository from "../models/entities/MarkersModel";
 import { CommandResponse, Markers, MarkersSaveRequest } from "../../typeDefinitions";
-import { MarkersModel } from "../models/entities/productModel";
+import { MarkersModel } from "../models/entities/MarkersModel";
 
-const validateSaveRequest = (saveProductRequest: MarkersSaveRequest): CommandResponse<Markers> => {
+const validateSaveRequest = (saveMarkerRequest: MarkersSaveRequest): CommandResponse<Markers> => {
 	const validationResponse: CommandResponse<Markers> =
 		<CommandResponse<Markers>>{ status: 200 };
 
-	if ((saveProductRequest.id == null) || (saveProductRequest.id.trim() === "")) {
+	if ((saveMarkerRequest.id == null) || (saveMarkerRequest.id.trim() === "")) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2025;
-	} else if ((saveProductRequest.location == null) || (saveProductRequest.location.trim() === "")) {
+	} else if ((saveMarkerRequest.location == null) || (saveMarkerRequest.location.trim() === "")) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2026;
-	} else if ((saveProductRequest.MarkerID == null) || isNaN(saveProductRequest.MarkerID)) {
+	} else if ((saveMarkerRequest.MarkerID == null) || isNaN(saveMarkerRequest.MarkerID)) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2027;
-	} else if (saveProductRequest.MarkerID < 0) {
+	} else if (saveMarkerRequest.MarkerID < 0) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2028;
 	}
@@ -27,8 +27,8 @@ const validateSaveRequest = (saveProductRequest: MarkersSaveRequest): CommandRes
 	return validationResponse;
 };
 
-export const execute = async (saveProductRequest: MarkersSaveRequest): Promise<CommandResponse<Markers>> => {
-	const validationResponse: CommandResponse<Markers> = validateSaveRequest(saveProductRequest);
+export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<CommandResponse<Markers>> => {
+	const validationResponse: CommandResponse<Markers> = validateSaveRequest(saveMarkersRequest);
 	if (validationResponse.status !== 200) {
 		return Promise.reject(validationResponse);
 	}
@@ -39,37 +39,37 @@ export const execute = async (saveProductRequest: MarkersSaveRequest): Promise<C
 		.then((startedTransaction: Sequelize.Transaction): Promise<MarkersModel | null> => {
 			updateTransaction = startedTransaction;
 
-			return ProductRepository.queryById(<string>saveProductRequest.id, updateTransaction);
-		}).then((queriedProduct: (MarkersModel | null)): Promise<MarkersModel> => {
-			if (queriedProduct == null) {
+			return MarkersRepository.queryById(<string>saveMarkersRequest.id, updateTransaction);
+		}).then((queriedMarker: (MarkersModel | null)): Promise<MarkersModel> => {
+			if (queriedMarker == null) {
 				return Promise.reject(<CommandResponse<Markers>>{
 					status: 404,
 					message: ErrorCodeLookup.EC1001
 				});
 			}
 			else
-				return queriedProduct.update(
+				return queriedMarker.update(
 				<Object>{
 
-					Longitude: saveProductRequest.Longitude,
-					Latitude: saveProductRequest.Latitude,
-					ArrivalTime: saveProductRequest.ArrivalTime
+					Longitude: saveMarkersRequest.Longitude,
+					Latitude: saveMarkersRequest.Latitude,
+					ArrivalTime: saveMarkersRequest.ArrivalTime
 				},
 				<Sequelize.InstanceUpdateOptions>{ transaction: updateTransaction });
-		}).then((updatedProduct: MarkersModel): Promise<CommandResponse<Markers>> => {
+		}).then((updatedMarker: MarkersModel): Promise<CommandResponse<Markers>> => {
 			updateTransaction.commit();
 
 			return Promise.resolve(<CommandResponse<Markers>>{
 				status: 200,
 				data: <Markers>{
-					id: updatedProduct.id,
-					MarkerID: updatedProduct.MarkerID,
-					Latitude:updatedProduct.Latitude,
-					ArrivalTime: Helper.formatDate(updatedProduct.ArrivalTime),
-					Longitude:updatedProduct.Longitude,
-					Temperature: updatedProduct.Temperature,
-					precipChance: updatedProduct.precipChance,
-					location: updatedProduct.location
+					id: updatedMarker.id,
+					MarkerID: updatedMarker.MarkerID,
+					Latitude:updatedMarker.Latitude,
+					ArrivalTime: Helper.formatDate(updatedMarker.ArrivalTime),
+					Longitude:updatedMarker.Longitude,
+					Temperature: updatedMarker.Temperature,
+					precipChance: updatedMarker.precipChance,
+					location: updatedMarker.location
 				}
 			});
 		}).catch((error: any): Promise<CommandResponse<Markers>> => {

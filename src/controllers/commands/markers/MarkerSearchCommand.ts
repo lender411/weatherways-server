@@ -1,7 +1,7 @@
 import { ErrorCodeLookup } from "../../lookups/stringLookup";
 import { CommandResponse, Markers } from "../../typeDefinitions";
-import * as ProductRepository from "../models/entities/productModel";
-import { MarkersModel } from "../models/entities/productModel";
+import * as MarkersRepository from "../models/entities/MarkersModel";
+import { MarkersModel } from "../models/entities/MarkersModel";
 import * as Helper from "../helpers/helper";
 
 const validation = (validationQuery: string): CommandResponse<Markers> => {
@@ -21,20 +21,20 @@ export const search = async (query: string): Promise<CommandResponse<Markers[]>>
 		return Promise.reject(validationResponse);
 	}
 
-	return ProductRepository.searchAll(query)
-		.then((existingProducts: MarkersModel[]): Promise<CommandResponse<Markers[]>> => {
+	return MarkersRepository.searchAll(query)
+		.then((existingMarkers: MarkersModel[]): Promise<CommandResponse<Markers[]>> => {
 			return Promise.resolve(<CommandResponse<Markers[]>>{
 				status: 200,
-				data: existingProducts.map<Markers>((existingProduct: MarkersModel) => {
+				data: existingMarkers.map<Markers>((existingMarker: MarkersModel) => {
 					return <Markers>{
-						id: existingProduct.id,
-						MarkerID: existingProduct.MarkerID,
-						Latitude:existingProduct.Latitude,
-						ArrivalTime: Helper.formatDate(existingProduct.ArrivalTime),
-						Longitude:existingProduct.Longitude,
-						Temperature: existingProduct.Temperature,
-						precipChance: existingProduct.precipChance,
-						location: existingProduct.location
+						id: existingMarker.id,
+						MarkerID: existingMarker.MarkerID,
+						Latitude:existingMarker.Latitude,
+						ArrivalTime: Helper.formatDate(existingMarker.ArrivalTime),
+						Longitude:existingMarker.Longitude,
+						Temperature: existingMarker.Temperature,
+						precipChance: existingMarker.precipChance,
+						location: existingMarker.location
 					};
 				})
 			});
