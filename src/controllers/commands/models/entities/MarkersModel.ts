@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 import { DatabaseConnection } from "../databaseConnection";
 import { DatabaseTableName } from "../constants/databaseTableNames";
-import { MarkersFieldName } from "../constants/fieldNames/productFieldNames";
+import { MarkersFieldName } from "../constants/fieldNames/markerFiledNames";
 import { Model, DataTypes, InitOptions, ModelAttributes, ModelAttributeColumnOptions } from "sequelize";
 
 
