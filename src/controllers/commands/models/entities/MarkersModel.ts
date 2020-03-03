@@ -79,6 +79,7 @@ export const queryByMarkerID = async (MarkerID: number, queryTransaction?: Seque
 	});
 };
 
+
 export const queryAll = async (): Promise<MarkersModel[]> => {
 	return MarkersModel.findAll(<Sequelize.FindOptions>{
 		id: [ [MarkersFieldName.ArrivalTime, "ASC"] ]
