@@ -7,7 +7,7 @@ dotenv.config({ path: ".env" });
 
 export let api = restify.createServer({
 	version: "0.0.1",
-	name: "register-apis"
+	name: "marker-apis"
 });
 
 api.pre(restify.pre.sanitizePath());
