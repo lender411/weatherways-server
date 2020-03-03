@@ -17,6 +17,7 @@ export const mapMarkerData = (queriedMarker: MarkersModel): Markers => {
 	};
 };
 
+
 export const queryById = async (id?: string): Promise<CommandResponse<Markers>> => {
 	if (!id || (id.trim() === "")) {
 		return Promise.reject(<CommandResponse<Markers>>{
@@ -61,6 +62,27 @@ export const queryByMarkerID = async (MarkerID: number): Promise<CommandResponse
 			return Promise.resolve(<CommandResponse<Markers>>{
 				status: 200,
 				data: mapMarkerData(existingMarker)
+			});
+		});
+};
+export const queryAllID = async (id: string): Promise<CommandResponse<Markers>> => {
+	if(id == null) {
+		return Promise.reject(<CommandResponse<Markers>>{
+			status: 422,
+			message: ErrorCodeLookup.EC2026
+		});
+}
+	return MarkersRepository.getAllID(id)
+		.then((existingMarker: (MarkersModel[])): Promise<CommandResponse<Markers>> => {
+			if (!existingMarker) {
+				return Promise.reject(<CommandResponse<Markers>>{
+					status: 404,
+					message: ErrorCodeLookup.EC1001
+				});
+			}
+			return Promise.resolve(<CommandResponse<Markers>>{
+				status: 200,
+				data: mapMarkerData(existingMarker[0])
 			});
 		});
 };

@@ -11,6 +11,7 @@ export enum RouteLookup {
 	// Markers
 	Markers = "/markers",
 	ByMarkerID = "/byMarkerID",
+	AllUserID = "/AllUserID",
 
 
 	// Search
