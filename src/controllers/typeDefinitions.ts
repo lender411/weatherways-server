@@ -31,7 +31,7 @@ export interface ApiResponse {
 	errorMessage?: string;
 }
 
-export interface ProductSaveResponse extends ApiResponse {
+export interface MarkerSaveResponse extends ApiResponse {
 	markers: Markers;
 }
 // End API response data

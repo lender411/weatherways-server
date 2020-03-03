@@ -66,10 +66,9 @@ MarkersModel.init(
 
 const Op = Sequelize.Op;
 
-export const queryById = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkersModel | null> => {
-	return MarkersModel.findOne(<Sequelize.FindOptions>{
-		transaction: queryTransaction,
-		where: <Sequelize.WhereAttributeHash>{ id: id }
+export const queryById = async (): Promise<MarkersModel[]> => {
+	return MarkersModel.findAll(<Sequelize.FindOptions>{
+		id: [ [MarkersFieldName.ID, "ASC"]]
 	});
 };
 
