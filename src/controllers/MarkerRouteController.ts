@@ -58,7 +58,7 @@ export const queryByUserId = async (req: restify.Request, res: restify.Response,
 			return next();
 		});
 };
-export const gettAllUserId = async (req: restify.Request, res: restify.Response, next: restify.Next) => {
+export const getAllUserId = async (req: restify.Request, res: restify.Response, next: restify.Next) => {
 	MarkerQuery.queryAllID(req.params[ParameterLookup.id])
 		.then((markerQueryCommandResponse: CommandResponse<Markers>) => {
 			res.send(
