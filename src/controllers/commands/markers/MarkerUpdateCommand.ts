@@ -13,9 +13,6 @@ const validateSaveRequest = (saveMarkerRequest: MarkersSaveRequest): CommandResp
 	if ((saveMarkerRequest.id == null) || (saveMarkerRequest.id.trim() === "")) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2025;
-	} else if ((saveMarkerRequest.location == null) || (saveMarkerRequest.location.trim() === "")) {
-		validationResponse.status = 422;
-		validationResponse.message = ErrorCodeLookup.EC2026;
 	} else if ((saveMarkerRequest.MarkerID == null) || isNaN(saveMarkerRequest.MarkerID)) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2027;
