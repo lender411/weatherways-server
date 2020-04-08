@@ -9,7 +9,6 @@ import { MarkersModel } from "../models/entities/MarkersModel";
 const validateSaveRequest = (saveMarkersRequest: MarkersSaveRequest): CommandResponse<Markers> => {
 	const validationResponse: CommandResponse<Markers> =
 		<CommandResponse<Markers>>{ status: 200 };
-
 	if ((saveMarkersRequest.MarkerID == null) || isNaN(saveMarkersRequest.MarkerID)) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2027;
@@ -47,17 +46,15 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	const weather = JSON.parse(response);
 	// sends current data not arrival time data
 	// sends cloud cover instead of precipitation chance because I cant find it in the messages anymore
-
-
 	const markerToCreate: MarkersModel = <MarkersModel>{
 		id:saveMarkersRequest.id,
-		temperature: weather.main.temp,
+		Temperature: weather.main.temp,
 		MarkerID: saveMarkersRequest.MarkerID,
 		precipChance: weather.clouds.all,
-		ArrivalTime: saveMarkersRequest.ArrivalTime,
 		Latitude: saveMarkersRequest.Latitude,
 		Longitude: saveMarkersRequest.Longitude,
-		location: saveMarkersRequest.location
+		location: saveMarkersRequest.location,
+		ArrivalTime: saveMarkersRequest.ArrivalTime
 
 	};
 
