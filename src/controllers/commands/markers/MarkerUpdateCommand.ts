@@ -10,7 +10,7 @@ const validateSaveRequest = (saveMarkerRequest: MarkersSaveRequest): CommandResp
 	const validationResponse: CommandResponse<Markers> =
 		<CommandResponse<Markers>>{ status: 200 };
 
-	if ((saveMarkerRequest.id == null) || (saveMarkerRequest.id.trim() === "")) {
+	if (saveMarkerRequest.id == null) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2025;
 	} else if ((saveMarkerRequest.MarkerID == null) || isNaN(saveMarkerRequest.MarkerID)) {
