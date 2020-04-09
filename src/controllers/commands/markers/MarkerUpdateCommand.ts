@@ -24,6 +24,7 @@ const validateSaveRequest = (saveMarkerRequest: MarkersSaveRequest): CommandResp
 	return validationResponse;
 };
 
+
 export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<CommandResponse<Markers>> => {
 	const validationResponse: CommandResponse<Markers> = validateSaveRequest(saveMarkersRequest);
 	if (validationResponse.status !== 200) {
