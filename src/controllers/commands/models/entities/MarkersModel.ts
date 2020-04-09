@@ -21,7 +21,7 @@ MarkersModel.init(
 	<ModelAttributes>{
 		id: <ModelAttributeColumnOptions>{
 			field: MarkersFieldName.ID,
-			type: DataTypes.STRING(32),
+			type: DataTypes.UUID,
 			autoIncrement: true,
 			primaryKey: true
 

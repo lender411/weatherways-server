@@ -12,7 +12,7 @@ export enum RouteLookup {
 	Markers = "/markers",
 	ByMarkerID = "/byMarkerID",
 	AllUserID = "/AllUserID",
-
+	ADD = "/Add",
 
 	// Search
 	Search = "/search",
