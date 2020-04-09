@@ -19,7 +19,7 @@ export const mapMarkerData = (queriedMarker: MarkersModel): Markers => {
 
 
 export const queryById = async (id?: string): Promise<CommandResponse<Markers>> => {
-	if (!id || (id.trim() === "")) {
+	if (!id ) {
 		return Promise.reject(<CommandResponse<Markers>>{
 			status: 422,
 			message: ErrorCodeLookup.EC2025
