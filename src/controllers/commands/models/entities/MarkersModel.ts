@@ -91,10 +91,8 @@ export const queryAll = async (): Promise<MarkersModel[]> => {
 };
 
 export const searchAll = async (query: string): Promise<MarkersModel[]> => {
-	return MarkersModel.findAll({
-		where: {
-			MarkerID: { [Op.like]: query + "%" }
-		}
+	return MarkersModel.findAll(<Sequelize.FindOptions>{
+		id: [ [MarkersFieldName.ArrivalTime, "ASC"] ]
 	});
 };
 
