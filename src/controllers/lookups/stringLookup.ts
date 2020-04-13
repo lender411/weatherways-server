@@ -36,7 +36,7 @@ export enum ErrorCodeLookup {
 
 	// General
 	// General - product
-	EC2001 = "Unable to retrieve product listing.",
+	EC2001 = "Unable to retrieve marker listing.",
 	EC2001B = "Unable to retrieve cart listing.",
 	EC2002 = "Unable to retrieve product details",
 	EC2025 = "The provided product record ID is not valid.",

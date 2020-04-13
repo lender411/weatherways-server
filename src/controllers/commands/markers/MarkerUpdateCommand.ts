@@ -48,12 +48,31 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 				});
 			}
 			else
-				return queriedMarker.update(
+				const request = require("request");
+				const openWeatherKey = "80f0f7a1ea95a376129420c77fe45bb9";
+				const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}`;
+				const response = "";
+
+				request(url, function (err, response, body) {
+					if(err) {
+						console.log("error:", err);
+					} else {
+						response = body;
+						console.log("body:", body);
+					}
+			});
+
+			const weather = JSON.parse(response);
+
+			return queriedMarker.update(
 				<Object>{
 
+					Temperature: weather.main.temp,
 					Longitude: saveMarkersRequest.Longitude,
 					Latitude: saveMarkersRequest.Latitude,
-					ArrivalTime: saveMarkersRequest.ArrivalTime
+					ArrivalTime: saveMarkersRequest.ArrivalTime,
+					precipChance: weather.clouds.all
+
 				},
 				<Sequelize.InstanceUpdateOptions>{ transaction: updateTransaction });
 		}).then((updatedMarker: MarkersModel): Promise<CommandResponse<Markers>> => {
