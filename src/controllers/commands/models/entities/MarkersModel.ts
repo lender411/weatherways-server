@@ -93,7 +93,7 @@ export const queryAll = async (): Promise<MarkersModel[]> => {
 export const searchAll = async (query: string): Promise<MarkersModel[]> => {
 	return MarkersModel.findAll({
 		where: {
-			id: { [Op.like]: query}
+			id: { id : query}
 		}
 	});
 };
