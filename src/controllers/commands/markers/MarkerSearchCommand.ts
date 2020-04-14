@@ -9,7 +9,7 @@ const validation = (validationQuery: string): CommandResponse<Markers> => {
 		<CommandResponse<Markers>>{ status: 200 };
 
 	if ((validationQuery == null) || (validationQuery.trim() === "")) {
-		validationResponse.status = 422;
+		validationResponse.status = 422	;
 		validationResponse.message = ErrorCodeLookup.EC2026B;
 	}
 	return validationResponse;

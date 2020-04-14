@@ -90,10 +90,11 @@ export const queryAll = async (): Promise<MarkersModel[]> => {
 	});
 };
 
-export const searchAll = async (id: string): Promise<MarkersModel[]> => {
+export const searchAll = async (query: string): Promise<MarkersModel[]> => {
 	return MarkersModel.findAll({
-		where: <Sequelize.WhereAttributeHash>{id : id }
-
+		where: {
+			id: { [Op.like]: query}
+		}
 	});
 };
 
