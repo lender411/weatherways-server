@@ -69,7 +69,7 @@ const Op = Sequelize.Op;
 export const queryById = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkerEntity | null> => {
 	return MarkerEntity.findOne(<Sequelize.FindOptions>{
 		transaction: queryTransaction,
-		where: <Sequelize.WhereOptions>{ id: id }
+		where: { id: id }
 	});
 };
 export const getAllID = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkerEntity[]> => {
