@@ -64,8 +64,8 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 		.then((createdTransaction: Sequelize.Transaction): Promise<MarkersModel | null> => {
 			createTransaction = createdTransaction;
 
-			return MarkersRepository.queryByMarkerID(
-				saveMarkersRequest.MarkerID,
+			return MarkersRepository.create(
+				markerToCreate,
 				createTransaction);
 		}).then((existingMarker: (MarkersModel | null)): Promise<MarkersModel> => {
 			if (existingMarker != null) {
