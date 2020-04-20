@@ -43,7 +43,7 @@ export const queryById = async (id?: string): Promise<CommandResponse<Markers>> 
 };
 
 export const queryByMarkerID = async (MarkerID: number): Promise<CommandResponse<Markers>> => {
-	if (MarkerID == 1 || MarkerID == null) {
+	if (MarkerID == 0) {
 		return Promise.reject(<CommandResponse<Markers>>{
 			status: 422,
 			message: ErrorCodeLookup.EC2026
