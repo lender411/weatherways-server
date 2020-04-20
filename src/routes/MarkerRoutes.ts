@@ -5,7 +5,7 @@ import * as MarkerRouteController from "../controllers/MarkerRouteController";
 function markerRoute(server: restify.Server) {
 	server.get({ path: (RouteLookup.API + RouteLookup.Markers), version: "0.0.1" }, MarkerRouteController.queryMarkers);
 
-	server.get({ path: (RouteLookup.API + RouteLookup.Markers), version: "0.0.1" }, MarkerRouteController.createMarker);
+	server.post({ path: (RouteLookup.API + RouteLookup.Markers), version: "0.0.1" }, MarkerRouteController.createMarker);
 
 	server.get({ path: (RouteLookup.API + RouteLookup.Markers + RouteLookup.idParameter), version: "0.0.1" }, MarkerRouteController.queryByUserId);
 
