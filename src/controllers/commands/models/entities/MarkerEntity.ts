@@ -74,7 +74,7 @@ export const queryById = async (id: string, queryTransaction?: Sequelize.Transac
 };
 export const getAllID = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkerEntity[]> => {
 	return MarkerEntity.findAll(<Sequelize.FindOptions>{
-		attributes: [ "id", "MarkersID"]
+		attributes: [ id, "MarkersID"]
 	});
 };
 export const queryByMarkerID = async (MarkerID: number, queryTransaction?: Sequelize.Transaction): Promise<MarkerEntity | null> => {
