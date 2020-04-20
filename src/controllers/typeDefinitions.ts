@@ -1,6 +1,6 @@
 // Request object definitions
 export interface MarkersSaveRequest {
-	id?: string;
+	id: string;
 	MarkerID: number;
 	Latitude: number;
 	Temperature: number;

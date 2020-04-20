@@ -5,6 +5,7 @@ import * as DatabaseConnection from "../models/databaseConnection";
 import * as MarkersRepository from "../models/entities/MarkersModel";
 import { CommandResponse, Markers, MarkersSaveRequest } from "../../typeDefinitions";
 import { MarkersModel } from "../models/entities/MarkersModel";
+import { createMarker } from "../../MarkerRouteController";
 
 const validateSaveRequest = (saveMarkersRequest: MarkersSaveRequest): CommandResponse<Markers> => {
 	const validationResponse: CommandResponse<Markers> =
@@ -12,17 +13,13 @@ const validateSaveRequest = (saveMarkersRequest: MarkersSaveRequest): CommandRes
 	if ((saveMarkersRequest.MarkerID == null) || isNaN(saveMarkersRequest.MarkerID)) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2027;
-	}
-	else if((saveMarkersRequest.id == null || saveMarkersRequest.id.trim() === "")) {
+	} else if((saveMarkersRequest.id == null || saveMarkersRequest.id.trim() === "")) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2026;
-	}	else if (saveMarkersRequest.MarkerID < 0) {
+	}  else if (saveMarkersRequest.MarkerID < 0) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2028;
-	} else if (saveMarkersRequest.id == null) {
-        validationResponse.status = 422;
-        validationResponse.message = ErrorCodeLookup.EC2028B;
-    }
+	}
 
 	return validationResponse;
 };
@@ -33,7 +30,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 		return Promise.reject(validationResponse);
 	}
 
-	const request = require("request");
+	/*const request = require("request");
 	const openWeatherKey = "80f0f7a1ea95a376129420c77fe45bb9";
 	const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}`;
     const response = "";
@@ -47,14 +44,14 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 		}
 	});
 
-	const weather = JSON.parse(response);
+	const weather = JSON.parse(response);*/
 	// sends current data not arrival time data
 	// sends cloud cover instead of precipitation chance because I cant find it in the messages anymore
 	const markerToCreate: MarkersModel = <MarkersModel>{
 		id:saveMarkersRequest.id,
-		Temperature: weather.main.temp,
+		// Temperature: weather.main.temp,
 		MarkerID: saveMarkersRequest.MarkerID,
-		precipChance: weather.clouds.all,
+		// precipChance: weather.clouds.all,
 		Latitude: saveMarkersRequest.Latitude,
 		Longitude: saveMarkersRequest.Longitude,
 		location: saveMarkersRequest.location,
@@ -62,15 +59,15 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 
 	};
 
-	let createTransaction: Sequelize.Transaction;
+	let createMarker: Sequelize.Transaction;
 
 	return DatabaseConnection.startTransaction() 
 		.then((createdTransaction: Sequelize.Transaction): Promise<MarkersModel | null> => {
-			createTransaction = createdTransaction;
+			createMarker = createdTransaction;
 
-			return MarkersRepository.create(
-				markerToCreate,
-				createTransaction);
+			return MarkersRepository.queryById(
+				saveMarkersRequest.id,
+				createMarker);
 		}).then((existingMarker: (MarkersModel | null)): Promise<MarkersModel> => {
 			if (existingMarker != null) {
 				return Promise.reject(<CommandResponse<Markers>>{
@@ -82,10 +79,10 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 			return MarkersModel.create(
 				markerToCreate,
 				<Sequelize.CreateOptions>{
-					transaction: createTransaction
+					transaction: createMarker
 				});
 		}).then((createdMarker: MarkersModel): Promise<CommandResponse<Markers>> => {
-			createTransaction.commit();
+			createMarker.commit();
 
 			return Promise.resolve(<CommandResponse<Markers>>{
 				status: 201,
@@ -101,8 +98,8 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 				}
 			});
 		}).catch((error: any): Promise<CommandResponse<Markers>> => {
-			if (createTransaction != null) {
-				createTransaction.rollback();
+			if (createMarker != null) {
+				createMarker.rollback();
 			}
 
 			return Promise.reject(<CommandResponse<Markers>>{

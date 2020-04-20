@@ -72,7 +72,7 @@ export const queryAllID = async (id: string): Promise<CommandResponse<Markers>> 
 			message: ErrorCodeLookup.EC2026
 		});
 }
-	return MarkersRepository.query()
+	return MarkersRepository.getAllID(id)
 		.then((existingMarker: (MarkersModel[])): Promise<CommandResponse<Markers>> => {
 			if (!existingMarker) {
 				return Promise.reject(<CommandResponse<Markers>>{
