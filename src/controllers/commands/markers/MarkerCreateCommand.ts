@@ -12,7 +12,11 @@ const validateSaveRequest = (saveMarkersRequest: MarkersSaveRequest): CommandRes
 	if ((saveMarkersRequest.MarkerID == null) || isNaN(saveMarkersRequest.MarkerID)) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2027;
-	} else if (saveMarkersRequest.MarkerID < 0) {
+	}
+	else if((saveMarkersRequest.id == null || saveMarkersRequest.id.trim() === "")) {
+		validationResponse.status = 422;
+		validationResponse.message = ErrorCodeLookup.EC2026;
+	}	else if (saveMarkersRequest.MarkerID < 0) {
 		validationResponse.status = 422;
 		validationResponse.message = ErrorCodeLookup.EC2028;
 	} else if (saveMarkersRequest.id == null) {
