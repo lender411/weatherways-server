@@ -1,32 +1,15 @@
 import * as restify from "restify";
 import * as MarkerQuery from "./commands/markers/MarkerQuery";
-import * as MarkersQuery from "./commands/markers/MarkersQuery";
+
 import { ParameterLookup, ErrorCodeLookup } from "./lookups/stringLookup";
 import * as MarkerCreateCommand from "./commands/markers/MarkerCreateCommand";
 import * as MarkerDeleteCommand from "./commands/markers/MarkerDeleteCommand";
 import * as MarkerUpdateCommand from "./commands/markers/MarkerUpdateCommand";
-import * as MarkerSearchCommand from "./commands/markers/MarkerSearchCommand";
+import * as MarkersQueryCommand from "./commands/markers/MarkersQueryCommand";
 import { CommandResponse, Markers, MarkersSaveRequest } from "./typeDefinitions";
 
 export const queryMarkers = async (req: restify.Request, res: restify.Response, next: restify.Next) => {
-	MarkersQuery.query()
-		.then((markersQueryCommandResponse: CommandResponse<Markers[]>) => {
-			res.send(
-				markersQueryCommandResponse.status,
-				markersQueryCommandResponse.data);
-
-			return next();
-		}, (error: any) => {
-			res.send(
-				(error.status || 500),
-				(error.message || ErrorCodeLookup.EC2001));
-
-			return next();
-		});
-};
-
-export const searchMarkers = async (req: restify.Request, res: restify.Response, next: restify.Next) => {
-	MarkerSearchCommand.search(req.params[ParameterLookup.MarkerID])
+	MarkersQueryCommand.query()
 		.then((markersQueryCommandResponse: CommandResponse<Markers[]>) => {
 			res.send(
 				markersQueryCommandResponse.status,
