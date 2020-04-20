@@ -3,13 +3,13 @@ import { RouteLookup } from "../controllers/lookups/stringLookup";
 import * as MarkerRouteController from "../controllers/MarkerRouteController";
 
 function markerRoute(server: restify.Server) {
-	// server.get({ path: (RouteLookup.API + RouteLookup.Markers), version: "0.0.1" }, MarkerRouteController.queryMarkers);
+	server.get({ path: (RouteLookup.API + RouteLookup.Markers), version: "0.0.1" }, MarkerRouteController.queryMarkers);
 
 	server.post({ path: (RouteLookup.API + RouteLookup.Markers), version: "0.0.1" }, MarkerRouteController.createMarker);
 
 	server.get({ path: (RouteLookup.API + RouteLookup.Markers + RouteLookup.idParameter), version: "0.0.1" }, MarkerRouteController.queryByUserId);
 
-	server.get({ path: RouteLookup.API + RouteLookup.Markers + RouteLookup.AllUserID, version: "0.0.1"}, MarkerRouteController.getAllUserId);
+	server.get({ path: RouteLookup.API + RouteLookup.Markers + RouteLookup.AllUserID + RouteLookup.MarkersIdParameter, version: "0.0.1"}, MarkerRouteController.getAllUserId);
 
 	server.get({ path: (RouteLookup.API + RouteLookup.Markers + RouteLookup.ByMarkerID + RouteLookup.MarkersIdParameter), version: "0.0.1" }, MarkerRouteController.queryMarkersByMarkerID);
 
