@@ -94,7 +94,6 @@ const saveMarker = async (
 	res: restify.Response,
 	next: restify.Next,
 	performSave: (markerSaveRequest: MarkersSaveRequest) => Promise<CommandResponse<Markers>>): Promise<void> => {
-
 	performSave(req.body)
 		.then((markerSaveCommandResponse: CommandResponse<Markers>) => {
 			res.send(
