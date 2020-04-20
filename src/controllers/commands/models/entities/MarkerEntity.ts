@@ -66,8 +66,8 @@ MarkerEntity.init(
 
 
 
-export const queryById = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkerEntity | null> => {
-	return MarkerEntity.findOne(<Sequelize.FindOptions>{
+export const queryById = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkerEntity[]> => {
+	return MarkerEntity.findAll(<Sequelize.FindOptions>{
 		transaction: queryTransaction,
 		where: { id: id }
 	});

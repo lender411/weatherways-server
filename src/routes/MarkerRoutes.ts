@@ -17,7 +17,7 @@ function markerRoute(server: restify.Server) {
 
 	server.post({ path: (RouteLookup.API + RouteLookup.Markers + RouteLookup.ADD + RouteLookup.MarkersIdParameter), version: "0.0.1" }, MarkerRouteController.createMarker);
 
-	server.put({ path: (RouteLookup.API + RouteLookup.Markers + RouteLookup.idParameter), version: "0.0.1" }, MarkerRouteController.queryByUserId);
+	server.put({ path: (RouteLookup.API + RouteLookup.Markers + RouteLookup.idParameter), version: "0.0.1" }, MarkerRouteController.updateMarker);
 
 	server.del({ path: (RouteLookup.API + RouteLookup.Markers + RouteLookup.idParameter), version: "0.0.1" }, MarkerRouteController.deleteMarker);
 
