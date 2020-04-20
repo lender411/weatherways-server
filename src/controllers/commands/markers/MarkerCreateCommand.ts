@@ -21,6 +21,7 @@ const validateSaveRequest = (saveMarkersRequest: MarkersSaveRequest): CommandRes
 		validationResponse.message = ErrorCodeLookup.EC2028;
 	}
 
+
 	return validationResponse;
 };
 
