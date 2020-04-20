@@ -27,7 +27,7 @@ export const queryById = async (id?: string): Promise<CommandResponse<Markers>> 
 	}
 
 	return MarkersRepository.queryById(id)
-		.then((existingMarker: (MarkerEntity | null)): Promise<CommandResponse<Markers>> => {
+		.then((existingMarker: (MarkerEntity[] | null)): Promise<CommandResponse<Markers>> => {
 			if (!existingMarker) {
 				return Promise.reject(<CommandResponse<Markers>>{
 					status: 404,
@@ -37,7 +37,7 @@ export const queryById = async (id?: string): Promise<CommandResponse<Markers>> 
 
 			return Promise.resolve(<CommandResponse<Markers>>{
 				status: 200,
-				data: mapMarkerData(existingMarker)
+				data: mapMarkerData(existingMarker[0])
 			});
 		});
 };
