@@ -5,7 +5,7 @@ import { MarkersFieldName } from "../constants/fieldNames/markerFiledNames";
 import { Model, DataTypes, InitOptions, ModelAttributes, ModelAttributeColumnOptions } from "sequelize";
 
 
-export class MarkersModel extends Model {
+export class MarkerEntity extends Model {
 	public MarkerID!: number;
 	public Temperature!: number;
 	public precipChance!: number;
@@ -17,7 +17,7 @@ export class MarkersModel extends Model {
 
 }
 
-MarkersModel.init(
+MarkerEntity.init(
 	<ModelAttributes>{
 		id: <ModelAttributeColumnOptions>{
 			field: MarkersFieldName.ID,
@@ -66,47 +66,47 @@ MarkersModel.init(
 
 const Op = Sequelize.Op;
 
-export const queryById = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkersModel | null> => {
-	return MarkersModel.findOne(<Sequelize.FindOptions>{
+export const queryById = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkerEntity | null> => {
+	return MarkerEntity.findOne(<Sequelize.FindOptions>{
 		transaction: queryTransaction,
-		where: <Sequelize.WhereAttributeHash>{ id: id }
+		where: <Sequelize.WhereValue>{ id: id }
 	});
 };
-export const getAllID = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkersModel[]> => {
-	return MarkersModel.findAll(<Sequelize.FindOptions>{
+export const getAllID = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkerEntity[]> => {
+	return MarkerEntity.findAll(<Sequelize.FindOptions>{
 		attributes: [ "id", "MarkersID"]
 	});
 };
-export const queryByMarkerID = async (MarkerID: number, queryTransaction?: Sequelize.Transaction): Promise<MarkersModel | null> => {
-	return MarkersModel.findOne(<Sequelize.FindOptions>{
+export const queryByMarkerID = async (MarkerID: number, queryTransaction?: Sequelize.Transaction): Promise<MarkerEntity | null> => {
+	return MarkerEntity.findOne(<Sequelize.FindOptions>{
 		transaction: queryTransaction,
 		where: <Sequelize.WhereOptions>{ MarkerID: MarkerID }
 	});
 };
 
-export const queryAll = async (): Promise<MarkersModel[]> => {
-	return MarkersModel.findAll(<Sequelize.FindOptions>{
+export const queryAll = async (): Promise<MarkerEntity[]> => {
+	return MarkerEntity.findAll(<Sequelize.FindOptions>{
 		id: [ [MarkersFieldName.ArrivalTime, "ASC"] ]
 	});
 };
 
-export const searchAll = async (query: string): Promise<MarkersModel[]> => {
-	return MarkersModel.findAll(<Sequelize.FindOptions>{
+export const searchAll = async (query: string): Promise<MarkerEntity[]> => {
+	return MarkerEntity.findAll(<Sequelize.FindOptions>{
 		where: {
 			id: [ query]
 		}
 	});
 };
 
-export const create = async (newMarker: MarkersModel, createTransaction?: Sequelize.Transaction): Promise<MarkersModel> => {
-	return MarkersModel.create(
+export const created = async (newMarker: MarkerEntity, createTransaction?: Sequelize.Transaction): Promise<MarkerEntity> => {
+	return MarkerEntity.create(
 		newMarker,
 		<Sequelize.CreateOptions>{
 			transaction: createTransaction
 		});
 };
 
-export const destroy = async (markerListEntry: MarkersModel, destroyTransaction?: Sequelize.Transaction): Promise<void> => {
+export const destroy = async (markerListEntry: MarkerEntity, destroyTransaction?: Sequelize.Transaction): Promise<void> => {
 	return markerListEntry.destroy(
 		<Sequelize.InstanceDestroyOptions>{
 			transaction: destroyTransaction

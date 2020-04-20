@@ -2,9 +2,9 @@ import Sequelize from "sequelize";
 import * as Helper from "../helpers/helper";
 import { ErrorCodeLookup } from "../../lookups/stringLookup";
 import * as DatabaseConnection from "../models/databaseConnection";
-import * as MarkersRepository from "../models/entities/MarkersModel";
+import * as MarkersRepository from "../models/entities/MarkerEntity";
 import { CommandResponse, Markers, MarkersSaveRequest } from "../../typeDefinitions";
-import { MarkersModel } from "../models/entities/MarkersModel";
+import { MarkerEntity } from "../models/entities/MarkerEntity";
 
 const validateSaveRequest = (saveMarkerRequest: MarkersSaveRequest): CommandResponse<Markers> => {
 	const validationResponse: CommandResponse<Markers> =
@@ -33,11 +33,11 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	let updateTransaction: Sequelize.Transaction;
 
 	return DatabaseConnection.startTransaction()
-		.then((startedTransaction: Sequelize.Transaction): Promise<MarkersModel | null> => {
+		.then((startedTransaction: Sequelize.Transaction): Promise<MarkerEntity | null> => {
 			updateTransaction = startedTransaction;
 
 			return MarkersRepository.queryById(<string>saveMarkersRequest.id, updateTransaction);
-		}).then((queriedMarker: (MarkersModel | null)): Promise<MarkersModel> => {
+		}).then((queriedMarker: (MarkerEntity | null)): Promise<MarkerEntity> => {
 			if (queriedMarker == null) {
 				return Promise.reject(<CommandResponse<Markers>>{
 					status: 404,
@@ -53,7 +53,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 					ArrivalTime: saveMarkersRequest.ArrivalTime
 				},
 				<Sequelize.InstanceUpdateOptions>{ transaction: updateTransaction });
-		}).then((updatedMarker: MarkersModel): Promise<CommandResponse<Markers>> => {
+		}).then((updatedMarker: MarkerEntity): Promise<CommandResponse<Markers>> => {
 			updateTransaction.commit();
 
 			return Promise.resolve(<CommandResponse<Markers>>{

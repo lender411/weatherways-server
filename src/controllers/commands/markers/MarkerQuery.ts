@@ -1,10 +1,10 @@
 import * as Helper from "../helpers/helper";
 import { ErrorCodeLookup } from "../../lookups/stringLookup";
 import { CommandResponse, Markers } from "../../typeDefinitions";
-import * as MarkersRepository from "../models/entities/MarkersModel";
-import { MarkersModel } from "../models/entities/MarkersModel";
+import * as MarkersRepository from "../models/entities/MarkerEntity";
+import { MarkerEntity } from "../models/entities/MarkerEntity";
 
-export const mapMarkerData = (queriedMarker: MarkersModel): Markers => {
+export const mapMarkerData = (queriedMarker: MarkerEntity): Markers => {
 	return <Markers>{
 		id: queriedMarker.id,
 		MarkerID: queriedMarker.MarkerID,
@@ -27,7 +27,7 @@ export const queryById = async (id?: string): Promise<CommandResponse<Markers>> 
 	}
 
 	return MarkersRepository.queryById(id)
-		.then((existingMarker: (MarkersModel | null)): Promise<CommandResponse<Markers>> => {
+		.then((existingMarker: (MarkerEntity | null)): Promise<CommandResponse<Markers>> => {
 			if (!existingMarker) {
 				return Promise.reject(<CommandResponse<Markers>>{
 					status: 404,
@@ -51,7 +51,7 @@ export const queryByMarkerID = async (MarkerID: number): Promise<CommandResponse
 	}
 
 	return MarkersRepository.queryByMarkerID(MarkerID)
-		.then((existingMarker: (MarkersModel | null)): Promise<CommandResponse<Markers>> => {
+		.then((existingMarker: (MarkerEntity | null)): Promise<CommandResponse<Markers>> => {
 			if (!existingMarker) {
 				return Promise.reject(<CommandResponse<Markers>>{
 					status: 404,
@@ -73,7 +73,7 @@ export const queryAllID = async (id: string): Promise<CommandResponse<Markers>> 
 		});
 }
 	return MarkersRepository.getAllID(id)
-		.then((existingMarker: (MarkersModel[])): Promise<CommandResponse<Markers>> => {
+		.then((existingMarker: (MarkerEntity[])): Promise<CommandResponse<Markers>> => {
 			if (!existingMarker) {
 				return Promise.reject(<CommandResponse<Markers>>{
 					status: 404,

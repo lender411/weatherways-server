@@ -1,7 +1,7 @@
 import { ErrorCodeLookup } from "../../lookups/stringLookup";
 import { CommandResponse, Markers } from "../../typeDefinitions";
-import * as MarkersRepository from "../models/entities/MarkersModel";
-import { MarkersModel } from "../models/entities/MarkersModel";
+import * as MarkersRepository from "../models/entities/MarkerEntity";
+import { MarkerEntity } from "../models/entities/MarkerEntity";
 import * as Helper from "../helpers/helper";
 
 const validation = (validationQuery: string): CommandResponse<Markers> => {
@@ -22,10 +22,10 @@ export const search = async (query: string): Promise<CommandResponse<Markers[]>>
 	}
 
 	return MarkersRepository.searchAll(query)
-		.then((existingMarkers: MarkersModel[]): Promise<CommandResponse<Markers[]>> => {
+		.then((existingMarkers: MarkerEntity[]): Promise<CommandResponse<Markers[]>> => {
 			return Promise.resolve(<CommandResponse<Markers[]>>{
 				status: 200,
-				data: existingMarkers.map<Markers>((existingMarker: MarkersModel) => {
+				data: existingMarkers.map<Markers>((existingMarker: MarkerEntity) => {
 					return <Markers>{
 						id: existingMarker.id,
 						MarkerID: existingMarker.MarkerID,

@@ -2,8 +2,8 @@ import Sequelize from "sequelize";
 import { CommandResponse } from "../../typeDefinitions";
 import { ErrorCodeLookup } from "../../lookups/stringLookup";
 import * as DatabaseConnection from "../models/databaseConnection";
-import * as MarkersRepository from "../models/entities/MarkersModel";
-import { MarkersModel } from "../models/entities/MarkersModel";
+import * as MarkersRepository from "../models/entities/MarkerEntity";
+import { MarkerEntity } from "../models/entities/MarkerEntity";
 
 export let execute = (id?: string): Promise<CommandResponse<void>> => {
 	if ((id == null) || (id.trim() === "")) {
@@ -13,11 +13,11 @@ export let execute = (id?: string): Promise<CommandResponse<void>> => {
 	let deleteTransaction: Sequelize.Transaction;
 
 	return DatabaseConnection.startTransaction()
-		.then((startedTransaction: Sequelize.Transaction): Promise<MarkersModel | null> => {
+		.then((startedTransaction: Sequelize.Transaction): Promise<MarkerEntity | null> => {
 			deleteTransaction = startedTransaction;
 
 			return MarkersRepository.queryById(id, deleteTransaction);
-		}).then((queriedMarker: (MarkersModel | null)): Promise<void> => {
+		}).then((queriedMarker: (MarkerEntity | null)): Promise<void> => {
 			if (queriedMarker == null) {
 				return Promise.resolve();
 			}

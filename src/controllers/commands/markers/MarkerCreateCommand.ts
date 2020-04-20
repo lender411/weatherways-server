@@ -2,9 +2,9 @@ import Sequelize from "sequelize";
 import * as Helper from "../helpers/helper";
 import { ErrorCodeLookup } from "../../lookups/stringLookup";
 import * as DatabaseConnection from "../models/databaseConnection";
-import * as MarkersRepository from "../models/entities/MarkersModel";
+import * as MarkersRepository from "../models/entities/MarkerEntity";
 import { CommandResponse, Markers, MarkersSaveRequest } from "../../typeDefinitions";
-import { MarkersModel } from "../models/entities/MarkersModel";
+import { MarkerEntity } from "../models/entities/MarkerEntity";
 import { createMarker } from "../../MarkerRouteController";
 
 const validateSaveRequest = (saveMarkersRequest: MarkersSaveRequest): CommandResponse<Markers> => {
@@ -47,7 +47,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	const weather = JSON.parse(response);*/
 	// sends current data not arrival time data
 	// sends cloud cover instead of precipitation chance because I cant find it in the messages anymore
-	const markerToCreate: MarkersModel = <MarkersModel>{
+	const markerToCreate: MarkerEntity = <MarkerEntity>{
 		id:saveMarkersRequest.id,
 		// Temperature: weather.main.temp,
 		MarkerID: saveMarkersRequest.MarkerID,
@@ -62,26 +62,21 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	let createMarker: Sequelize.Transaction;
 
 	return DatabaseConnection.startTransaction() 
-		.then((createdTransaction: Sequelize.Transaction): Promise<MarkersModel | null> => {
+		.then((createdTransaction: Sequelize.Transaction): Promise<MarkerEntity | null> => {
 			createMarker = createdTransaction;
 
 			return MarkersRepository.queryById(
 				saveMarkersRequest.id,
 				createMarker);
-		}).then((existingMarker: (MarkersModel | null)): Promise<MarkersModel> => {
+		}).then((existingMarker: (MarkerEntity | null)): Promise<MarkerEntity> => {
 			if (existingMarker != null) {
 				return Promise.reject(<CommandResponse<Markers>>{
 					status: 409,
 					message: ErrorCodeLookup.EC2029
 				});
 			}
-
-			return MarkersModel.create(
-				markerToCreate,
-				<Sequelize.CreateOptions>{
-					transaction: createMarker
-				});
-		}).then((createdMarker: MarkersModel): Promise<CommandResponse<Markers>> => {
+			return MarkersRepository.created(markerToCreate, createMarker);
+		}).then((createdMarker: MarkerEntity): Promise<CommandResponse<Markers>> => {
 			createMarker.commit();
 
 			return Promise.resolve(<CommandResponse<Markers>>{
@@ -93,8 +88,8 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 					ArrivalTime: Helper.formatDate(createdMarker.ArrivalTime),
 					Longitude: createdMarker.Longitude,
 					Latitude: createdMarker.Latitude,
-					Temperature: createdMarker.Temperature,
-					precipChance: createdMarker.precipChance
+					// Temperature: createdMarker.Temperature,
+					// precipChance: createdMarker.precipChance
 				}
 			});
 		}).catch((error: any): Promise<CommandResponse<Markers>> => {
