@@ -64,7 +64,7 @@ MarkerEntity.init(
 		tableName: DatabaseTableName.MARKERS
 	});
 
-const Op = Sequelize.Op;
+
 
 export const queryById = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkerEntity | null> => {
 	return MarkerEntity.findOne(<Sequelize.FindOptions>{
