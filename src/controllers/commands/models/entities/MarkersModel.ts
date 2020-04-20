@@ -72,7 +72,7 @@ export const queryById = async (id: string, queryTransaction?: Sequelize.Transac
 		where: <Sequelize.WhereAttributeHash>{ id: id }
 	});
 };
-export const getAllID = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkersModel[]> => {
+export const query =  (): Promise<MarkersModel[]> => {
 	return MarkersModel.findAll(<Sequelize.FindOptions>{
 		attributes: [ "id", "MarkersID"]
 	});
