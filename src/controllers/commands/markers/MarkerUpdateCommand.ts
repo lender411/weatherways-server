@@ -33,11 +33,11 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	let updateTransaction: Sequelize.Transaction;
 
 	return DatabaseConnection.startTransaction()
-		.then((startedTransaction: Sequelize.Transaction): Promise<MarkerEntity | null> => {
+		.then((startedTransaction: Sequelize.Transaction): Promise<MarkerEntity[]> => {
 			updateTransaction = startedTransaction;
 
 			return MarkersRepository.queryById(<string>saveMarkersRequest.id, updateTransaction);
-		}).then((queriedMarker: (MarkerEntity | null)): Promise<MarkerEntity> => {
+		}).then((queriedMarker: (MarkerEntity[] | null)): Promise<MarkerEntity> => {
 			if (queriedMarker == null) {
 				return Promise.reject(<CommandResponse<Markers>>{
 					status: 404,
@@ -45,7 +45,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 				});
 			}
 			else
-				return queriedMarker.update(
+				return queriedMarker[0].update(
 				<Object>{
 
 					Longitude: saveMarkersRequest.Longitude,

@@ -63,13 +63,13 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	let createMarker: Sequelize.Transaction;
 
 	return DatabaseConnection.startTransaction() 
-		.then((createdTransaction: Sequelize.Transaction): Promise<MarkerEntity | null> => {
+		.then((createdTransaction: Sequelize.Transaction): Promise<MarkerEntity[]> => {
 			createMarker = createdTransaction;
 
 			return MarkersRepository.queryById(
 				saveMarkersRequest.id,
 				createMarker);
-		}).then((existingMarker: (MarkerEntity | null)): Promise<MarkerEntity> => {
+		}).then((existingMarker: (MarkerEntity[] | null)): Promise<MarkerEntity> => {
 			if (existingMarker != null) {
 				return Promise.reject(<CommandResponse<Markers>>{
 					status: 409,

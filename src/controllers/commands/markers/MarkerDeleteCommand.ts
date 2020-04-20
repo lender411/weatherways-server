@@ -13,16 +13,16 @@ export let execute = (id?: string): Promise<CommandResponse<void>> => {
 	let deleteTransaction: Sequelize.Transaction;
 
 	return DatabaseConnection.startTransaction()
-		.then((startedTransaction: Sequelize.Transaction): Promise<MarkerEntity | null> => {
+		.then((startedTransaction: Sequelize.Transaction): Promise<MarkerEntity[]> => {
 			deleteTransaction = startedTransaction;
 
 			return MarkersRepository.queryById(id, deleteTransaction);
-		}).then((queriedMarker: (MarkerEntity | null)): Promise<void> => {
+		}).then((queriedMarker: (MarkerEntity[] | null)): Promise<void> => {
 			if (queriedMarker == null) {
 				return Promise.resolve();
 			}
 
-			return MarkersRepository.destroy(queriedMarker, deleteTransaction);
+			return MarkersRepository.destroy(queriedMarker[0], deleteTransaction);
 		}).then((): Promise<CommandResponse<void>> => {
 			deleteTransaction.commit();
 
