@@ -3,7 +3,6 @@ import { DatabaseConnection } from "../databaseConnection";
 import { DatabaseTableName } from "../constants/databaseTableNames";
 import { MarkersFieldName } from "../constants/fieldNames/markerFiledNames";
 import { Model, DataTypes, InitOptions, ModelAttributes, ModelAttributeColumnOptions } from "sequelize";
-import Bluebird from "@types/bluebird";
 
 
 export class MarkerEntity extends Model {
@@ -67,9 +66,11 @@ MarkerEntity.init(
 
 const Op = Sequelize.Op;
 
-export const queryById =  (id: string, queryTransaction?: Sequelize.Transaction): Bluebird<[MarkerEntity, boolean]> => {
-	return MarkerEntity.findOrCreate({ where: { id : id}, defaults: MarkerEntity});
-
+export const queryById = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkerEntity | null> => {
+	return MarkerEntity.findOne(<Sequelize.FindOptions>{
+		transaction: queryTransaction,
+		where: { id: id }
+	});
 };
 export const getAllID = async (id: string, queryTransaction?: Sequelize.Transaction): Promise<MarkerEntity[]> => {
 	return MarkerEntity.findAll(<Sequelize.FindOptions>{
