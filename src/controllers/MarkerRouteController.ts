@@ -6,6 +6,7 @@ import * as MarkerCreateCommand from "./commands/markers/MarkerCreateCommand";
 import * as MarkerDeleteCommand from "./commands/markers/MarkerDeleteCommand";
 import * as MarkerUpdateCommand from "./commands/markers/MarkerUpdateCommand";
 import * as MarkersQueryCommand from "./commands/markers/MarkersQueryCommand";
+import * as MarkersQueryAllCommand from "./commands/markers/MarkersQueryAllCommand";
 import { CommandResponse, Markers, MarkersSaveRequest } from "./typeDefinitions";
 
 export const queryMarkers = async (req: restify.Request, res: restify.Response, next: restify.Next) => {
@@ -25,9 +26,9 @@ export const queryMarkers = async (req: restify.Request, res: restify.Response, 
 		});
 };
 
-export const queryByUserId = async (req: restify.Request, res: restify.Response, next: restify.Next) => {
-	MarkerQuery.queryById(req.params[ParameterLookup.id])
-		.then((markerQueryCommandResponse: CommandResponse<Markers>) => {
+export const queryByUserId = (req: restify.Request, res: restify.Response, next: restify.Next) => {
+	MarkersQueryAllCommand.queryAllbyUserID(req.params[ParameterLookup.id])
+		.then((markerQueryCommandResponse: CommandResponse<Markers[]>) => {
 			res.send(
 				markerQueryCommandResponse.status,
 				markerQueryCommandResponse.data);

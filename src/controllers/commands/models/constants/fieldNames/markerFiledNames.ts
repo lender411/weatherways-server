@@ -8,3 +8,6 @@ export enum MarkersFieldName {
 	Latitude = "Latitude",
 	Longitude = "Longitude"
 }
+export enum UserFieldName {
+	Id= "id"
+}

@@ -37,16 +37,15 @@ export enum ErrorCodeLookup {
 
 	// General
 	// General - product
-	EC2001 = "Unable to retrieve product listing.",
-	EC2001B = "Unable to retrieve cart listing.",
-	EC2002 = "Unable to retrieve product details",
-	EC2025 = "The provided product record ID is not valid.",
-	EC2026 = "Please provide a valid product lookup code.",
-	EC2026B = "Please provide a valid product search.",
-	EC2027 = "Please provide a valid product count.",
+	EC2001 = "Unable to retrieve markers listing.",
+	EC2002 = "Unable to retrieve user details",
+	EC2025 = "The provided user ID is not valid.",
+	EC2026 = "Marker Id is invalid",
+	EC2026B = "Please provide a valid marker search.",
+	EC2027 = "Please provide a markerid.",
 	EC2027B = "Please provide a valid product quantity_sold.",
-	EC2028 = "Product count may not be negative.",
-	EC2029 = "Conflict on parameter: lookupcode.",
+	EC2028 = "MarkerID may not be negative.",
+	EC2029 = "Conflict on parameter: markerID.",
 	EC2028B = "Product price cannot be negative",
 	// End general - product
 }

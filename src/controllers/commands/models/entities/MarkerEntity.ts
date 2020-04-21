@@ -3,8 +3,27 @@ import { DatabaseConnection } from "../databaseConnection";
 import { DatabaseTableName } from "../constants/databaseTableNames";
 import { MarkersFieldName } from "../constants/fieldNames/markerFiledNames";
 import { Model, DataTypes, InitOptions, ModelAttributes, ModelAttributeColumnOptions } from "sequelize";
-
-
+const modelName: string = "User";
+export interface MarkerAttributes {
+	id: string;
+	MarkerID: number;
+	Temperature: number;
+	precipChance: number;
+	Latitude: number;
+	Longitude: number;
+	location: string;
+	ArrivalTime: Date;
+}
+export interface MarkerInstance {
+	id: string;
+	MarkerID: number;
+	Temperature: number;
+	precipChance: number;
+	Latitude: number;
+	Longitude: number;
+	location: string;
+	ArrivalTime: Date;
+}
 export class MarkerEntity extends Model {
 	public MarkerID!: number;
 	public Temperature!: number;
@@ -15,6 +34,9 @@ export class MarkerEntity extends Model {
 	public readonly id!: string;
 	public readonly ArrivalTime!: Date;
 
+}
+export interface UserInstance {
+	id: string;
 }
 
 MarkerEntity.init(
@@ -89,7 +111,11 @@ export const queryAll = async (): Promise<MarkerEntity[]> => {
 		id: [ [MarkersFieldName.ArrivalTime, "ASC"] ]
 	});
 };
-
+export const queryByAllUserId = (id: string): Promise<MarkerInstance[]> => {
+	return MarkerEntity.findAll(<Sequelize.FindOptions>{
+		where:<Sequelize.WhereOptions>{ id: id}
+	});
+};
 export const searchAll = async (query: string): Promise<MarkerEntity[]> => {
 	return MarkerEntity.findAll(<Sequelize.FindOptions>{
 		where: {
