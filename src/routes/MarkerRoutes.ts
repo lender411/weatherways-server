@@ -7,7 +7,7 @@ function markerRoute(server: restify.Server) {
 
 	server.post({ path: (RouteLookup.API + RouteLookup.Markers), version: "0.0.1" }, MarkerRouteController.createMarker);
 
-	server.get({ path: (RouteLookup.API + RouteLookup.User+ RouteLookup.idParameter), version: "0.0.1" }, MarkerRouteController.queryByUserId);
+	server.get({ path: (RouteLookup.API + RouteLookup.Markers+ RouteLookup.idParameter), version: "0.0.1" }, MarkerRouteController.queryByUserId);
 
 	server.get({ path: RouteLookup.API + RouteLookup.Markers + RouteLookup.AllUserID + RouteLookup.MarkersIdParameter, version: "0.0.1"}, MarkerRouteController.getAllUserId);
 
@@ -15,7 +15,7 @@ function markerRoute(server: restify.Server) {
 
 	// server.get({ path: (RouteLookup.API + RouteLookup.Markers + RouteLookup.Search + RouteLookup.MarkersIdParameter), version: "0.0.1" }, MarkerRouteController.searchMarkers);
 
-	server.post({ path: (RouteLookup.API + RouteLookup.User + RouteLookup.ADD + RouteLookup.idParameter), version: "0.0.1" }, MarkerRouteController.createMarker);
+	server.post({ path: (RouteLookup.API + RouteLookup.Markers + RouteLookup.ADD + RouteLookup.idParameter), version: "0.0.1" }, MarkerRouteController.createMarker);
 
 	server.put({ path: (RouteLookup.API + RouteLookup.Markers + RouteLookup.idParameter), version: "0.0.1" }, MarkerRouteController.updateMarker);
 
