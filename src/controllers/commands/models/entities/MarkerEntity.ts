@@ -3,7 +3,6 @@ import { DatabaseConnection } from "../databaseConnection";
 import { DatabaseTableName } from "../constants/databaseTableNames";
 import { MarkersFieldName } from "../constants/fieldNames/markerFiledNames";
 import { Model, DataTypes, InitOptions, ModelAttributes, ModelAttributeColumnOptions } from "sequelize";
-const modelName: string = "User";
 export interface MarkerAttributes {
 	id: string;
 	MarkerID: number;
@@ -61,7 +60,7 @@ MarkerEntity.init(
 		Temperature: <ModelAttributeColumnOptions>{
 			field: MarkersFieldName.Temperature,
 			type: new DataTypes.INTEGER,
-			allowNull: false,
+			allowNull: true,
 		},
 		Latitude: <ModelAttributeColumnOptions>{
 			field: MarkersFieldName.Latitude,
@@ -73,7 +72,8 @@ MarkerEntity.init(
 		},
 		precipChance: <ModelAttributeColumnOptions>{
 			field: MarkersFieldName.precipChance,
-			type: new DataTypes.INTEGER
+			type: new DataTypes.INTEGER,
+			allowNull: true,
 		},
 		location: <ModelAttributeColumnOptions>{
 			field: MarkersFieldName.location,
