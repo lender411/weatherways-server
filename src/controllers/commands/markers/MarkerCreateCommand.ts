@@ -62,19 +62,8 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	let createMarker: Sequelize.Transaction;
 
 	return DatabaseConnection.startTransaction() 
-		.then((createdTransaction: Sequelize.Transaction): Promise<MarkerEntity[]> => {
+		.then((createdTransaction: Sequelize.Transaction): Promise<MarkerEntity> => {
 			createMarker = createdTransaction;
-
-			return MarkersRepository.queryById(
-				saveMarkersRequest.id,
-				createMarker);
-		}).then((existingMarker: (MarkerEntity[])): Promise<MarkerEntity> => {
-			if (existingMarker != null) {
-				return Promise.reject(<CommandResponse<Markers>>{
-					status: 409,
-					message: ErrorCodeLookup.EC2029
-				});
-			}
 			return MarkersRepository.created(markerToCreate, createMarker);
 		}).then((createdMarker: MarkerEntity): Promise<CommandResponse<Markers>> => {
 			createMarker.commit();

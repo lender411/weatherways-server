@@ -98,6 +98,7 @@ export const createMarker = async (req: restify.Request, res: restify.Response, 
 	saveMarker(req, res, next, MarkerCreateCommand.execute);
 };
 
+
 export const updateMarker = async (req: restify.Request, res: restify.Response, next: restify.Next) => {
 	saveMarker(req, res, next, MarkerUpdateCommand.execute);
 };
