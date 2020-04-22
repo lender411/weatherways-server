@@ -9,6 +9,7 @@ export enum RouteLookup {
 	Test = "/test",
 
 	// Markers
+	User = "/User",
 	Markers = "/markers",
 	ByMarkerID = "/byMarkerID",
 	AllUserID = "/AllUserID",

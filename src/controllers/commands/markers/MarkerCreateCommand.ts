@@ -5,7 +5,6 @@ import * as DatabaseConnection from "../models/databaseConnection";
 import * as MarkersRepository from "../models/entities/MarkerEntity";
 import { CommandResponse, Markers, MarkersSaveRequest } from "../../typeDefinitions";
 import { MarkerEntity } from "../models/entities/MarkerEntity";
-import { createMarker } from "../../MarkerRouteController";
 
 const validateSaveRequest = (saveMarkersRequest: MarkersSaveRequest): CommandResponse<Markers> => {
 	const validationResponse: CommandResponse<Markers> =
@@ -69,7 +68,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 			return MarkersRepository.queryById(
 				saveMarkersRequest.id,
 				createMarker);
-		}).then((existingMarker: (MarkerEntity[] | null)): Promise<MarkerEntity> => {
+		}).then((existingMarker: (MarkerEntity[])): Promise<MarkerEntity> => {
 			if (existingMarker != null) {
 				return Promise.reject(<CommandResponse<Markers>>{
 					status: 409,
