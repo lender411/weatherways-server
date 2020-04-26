@@ -53,9 +53,6 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 		MarkerID: saveMarkersRequest.MarkerID,
 		precipChance: weather.clouds.all,
 		Latitude: saveMarkersRequest.Latitude,
-		Humidity: weather.main.humidity,
-		Description: weather.weather.main,
-		Icon: weather.weather.icon,
 		Longitude: saveMarkersRequest.Longitude,
 		location: saveMarkersRequest.location,
 		ArrivalTime: saveMarkersRequest.ArrivalTime
