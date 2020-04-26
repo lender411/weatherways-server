@@ -37,7 +37,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	const request = require("request");
 	const openWeatherKey = "80f0f7a1ea95a376129420c77fe45bb9";
 	const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}`;
-    let json = "";//not a const anymore
+    let json = ""; //not a const anymore
 
 	request(url, function (err, response, body) {
 		if(err) {
@@ -57,9 +57,6 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 		Temperature: weather.main.temp,
 		MarkerID: saveMarkersRequest.MarkerID,
 		precipChance: weather.clouds.all,
-		Description: weather.weather.main,
-		Humidity: weather.main.humidity,
-		Icon: weather.weather.icon,
 		Latitude: saveMarkersRequest.Latitude,
 		Longitude: saveMarkersRequest.Longitude,
 		location: saveMarkersRequest.location,

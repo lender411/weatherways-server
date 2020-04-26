@@ -87,9 +87,6 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 					ArrivalTime: Helper.formatDate(updatedMarker.ArrivalTime),
 					Longitude:updatedMarker.Longitude,
 					Temperature: updatedMarker.Temperature,
-					Icon: updatedMarker.weather.icon,
-					Description: updatedMarker.weather.main,
-					Humidity: updatedMarker.main.humidity,
 					precipChance: updatedMarker.precipChance,
 					location: updatedMarker.location
 				}
