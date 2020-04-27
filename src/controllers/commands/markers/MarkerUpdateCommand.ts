@@ -61,7 +61,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 						console.log("body:", body);
 					}
 			});
-			console.log("\njson:", json);
+			console.log("json:", json);
 			const weather = JSON.parse(json);
 
 			return queriedMarker.update(
