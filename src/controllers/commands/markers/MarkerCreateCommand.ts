@@ -34,17 +34,16 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	const openWeatherKey = "80f0f7a1ea95a376129420c77fe45bb9";
 	const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}`;
     response = "";
-
 	request(url, function (err, response, body) {
 		if(err) {
 			console.log("error:", err);
 		} else {
-			response = body;
+			responser = body;
 			console.log("body:", body);
 		}
 	});
-	const weather = JSON.parse(response);
 
+	const weather = JSON.parse(responser);
 	// sends current data not arrival time data
 	// sends cloud cover instead of precipitation chance because I cant find it in the messages anymore
 	const markerToCreate: MarkerEntity = <MarkerEntity>{
