@@ -50,8 +50,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 
 	console.log("json:", json);
 	const weather = JSON.parse(json);
-	// sends current data not arrival time data
-	// sends cloud cover instead of precipitation chance because I cant find it in the messages anymore
+
 	const markerToCreate: MarkersModel = <MarkersModel>{
 		id:saveMarkersRequest.id,
 		Temperature: weather.main.temp,
