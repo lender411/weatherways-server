@@ -60,7 +60,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 
 			const weather = JSON.parse(json);
 
-			return queriedMarker.update(
+			return queriedMarker[0].update(
 				<Object>{
 
 					Temperature: weather.main.temp,
