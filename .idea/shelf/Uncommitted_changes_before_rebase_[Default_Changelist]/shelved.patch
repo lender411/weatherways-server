@@ -1,0 +1,37 @@
+Index: src/controllers/commands/markers/MarkerCreateCommand.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import Sequelize from \"sequelize\";\r\nimport * as Helper from \"../helpers/helper\";\r\nimport { ErrorCodeLookup } from \"../../lookups/stringLookup\";\r\nimport * as DatabaseConnection from \"../models/databaseConnection\";\r\nimport * as MarkersRepository from \"../models/entities/MarkerEntity\";\r\nimport { CommandResponse, Markers, MarkersSaveRequest } from \"../../typeDefinitions\";\r\nimport { MarkerEntity } from \"../models/entities/MarkerEntity\";\r\n\r\nconst validateSaveRequest = (saveMarkersRequest: MarkersSaveRequest): CommandResponse<Markers> => {\r\n\tconst validationResponse: CommandResponse<Markers> =\r\n\t\t<CommandResponse<Markers>>{ status: 200 };\r\n\tif ((saveMarkersRequest.MarkerID == null) || isNaN(saveMarkersRequest.MarkerID)) {\r\n\t\tvalidationResponse.status = 422;\r\n\t\tvalidationResponse.message = ErrorCodeLookup.EC2027;\r\n\t} else if((saveMarkersRequest.id == null || saveMarkersRequest.id.trim() === \"\")) {\r\n\t\tvalidationResponse.status = 422;\r\n\t\tvalidationResponse.message = ErrorCodeLookup.EC2026;\r\n\t}  else if (saveMarkersRequest.MarkerID < 0) {\r\n\t\tvalidationResponse.status = 422;\r\n\t\tvalidationResponse.message = ErrorCodeLookup.EC2028;\r\n\t}\r\n\r\n\r\n\treturn validationResponse;\r\n};\r\n\r\nexport const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<CommandResponse<Markers>> => {\r\n\tconst validationResponse: CommandResponse<Markers> = validateSaveRequest(saveMarkersRequest);\r\n\tif (validationResponse.status !== 200) {\r\n\t\treturn Promise.reject(validationResponse);\r\n\t}\r\n\r\n\tconst request = require(\"request\");\r\n\tconst openWeatherKey = \"80f0f7a1ea95a376129420c77fe45bb9\";\r\n\tconst url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}`;\r\n    let json = \"\";\r\n\trequest(url, function (err, response, body) {\r\n\t\tif(err) {\r\n\t\t\tconsole.log(\"error:\", err);\r\n\t\t} else {\r\n\t\t\tjson = body;\r\n\t\t\tconsole.log(\"body:\", body);\r\n\t\t}\r\n\t});\r\n\r\n\tconst weather = JSON.parse(json);\r\n\t// sends current data not arrival time data\r\n\t// sends cloud cover instead of precipitation chance because I cant find it in the messages anymore\r\n\tconst markerToCreate: MarkerEntity = <MarkerEntity>{\r\n\t\tid:saveMarkersRequest.id,\r\n\t\tTemperature: weather.main.temp,\r\n\t\tMarkerID: saveMarkersRequest.MarkerID,\r\n\t\tprecipChance: weather.clouds.all,\r\n\t\tLatitude: saveMarkersRequest.Latitude,\r\n\t\tLongitude: saveMarkersRequest.Longitude,\r\n\t\tlocation: saveMarkersRequest.location,\r\n\t\tArrivalTime: saveMarkersRequest.ArrivalTime\r\n\r\n\t};\r\n\r\n\tlet createMarker: Sequelize.Transaction;\r\n\r\n\treturn DatabaseConnection.startTransaction() \r\n\t\t.then((createdTransaction: Sequelize.Transaction): Promise<MarkerEntity> => {\r\n\t\t\tcreateMarker = createdTransaction;\r\n\t\t\treturn MarkersRepository.created(markerToCreate, createMarker);\r\n\t\t}).then((createdMarker: MarkerEntity): Promise<CommandResponse<Markers>> => {\r\n\t\t\tcreateMarker.commit();\r\n\r\n\t\t\treturn Promise.resolve(<CommandResponse<Markers>>{\r\n\t\t\t\tstatus: 201,\r\n\t\t\t\tdata: <Markers>{\r\n\t\t\t\t\tid: createdMarker.id,\r\n\t\t\t\t\tMarkerID: createdMarker.MarkerID,\r\n\t\t\t\t\tlocation: createdMarker.location,\r\n\t\t\t\t\tArrivalTime: Helper.formatDate(createdMarker.ArrivalTime),\r\n\t\t\t\t\tLongitude: createdMarker.Longitude,\r\n\t\t\t\t\tLatitude: createdMarker.Latitude,\r\n\t\t\t\t\tTemperature: createdMarker.Temperature,\r\n\t\t\t\t\tprecipChance: createdMarker.precipChance\r\n\t\t\t\t}\r\n\t\t\t});\r\n\t\t}).catch((error: any): Promise<CommandResponse<Markers>> => {\r\n\t\t\tif (createMarker != null) {\r\n\t\t\t\tcreateMarker.rollback();\r\n\t\t\t}\r\n\r\n\t\t\treturn Promise.reject(<CommandResponse<Markers>>{\r\n\t\t\t\tstatus: (error.status || 500),\r\n\t\t\t\tmessage: (error.message || ErrorCodeLookup.EC1002)\r\n\t\t\t});\r\n\t\t});\r\n};\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/controllers/commands/markers/MarkerCreateCommand.ts	(revision 887c9a90b4a6242c030a6d5be103d9a252bbdbf0)
++++ src/controllers/commands/markers/MarkerCreateCommand.ts	(date 1587949604125)
+@@ -32,8 +32,8 @@
+ 
+ 	const request = require("request");
+ 	const openWeatherKey = "80f0f7a1ea95a376129420c77fe45bb9";
+-	const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}`;
+-    let json = "";
++	const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&units=imperial&appid=${openWeatherKey}`;
++	let json = "";
+ 	request(url, function (err, response, body) {
+ 		if(err) {
+ 			console.log("error:", err);
+@@ -46,6 +46,7 @@
+ 	const weather = JSON.parse(json);
+ 	// sends current data not arrival time data
+ 	// sends cloud cover instead of precipitation chance because I cant find it in the messages anymore
++
+ 	const markerToCreate: MarkerEntity = <MarkerEntity>{
+ 		id:saveMarkersRequest.id,
+ 		Temperature: weather.main.temp,
+@@ -60,7 +61,7 @@
+ 
+ 	let createMarker: Sequelize.Transaction;
+ 
+-	return DatabaseConnection.startTransaction() 
++	return DatabaseConnection.startTransaction()
+ 		.then((createdTransaction: Sequelize.Transaction): Promise<MarkerEntity> => {
+ 			createMarker = createdTransaction;
+ 			return MarkersRepository.created(markerToCreate, createMarker);

@@ -1,0 +1,44 @@
+Index: src/controllers/commands/markers/MarkerUpdateCommand.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import Sequelize from \"sequelize\";\r\nimport * as Helper from \"../helpers/helper\";\r\nimport { ErrorCodeLookup } from \"../../lookups/stringLookup\";\r\nimport * as DatabaseConnection from \"../models/databaseConnection\";\r\nimport * as MarkersRepository from \"../models/entities/MarkerEntity\";\r\nimport { CommandResponse, Markers, MarkersSaveRequest } from \"../../typeDefinitions\";\r\nimport { MarkerEntity } from \"../models/entities/MarkerEntity\";\r\n\r\nconst validateSaveRequest = (saveMarkerRequest: MarkersSaveRequest): CommandResponse<Markers> => {\r\n\tconst validationResponse: CommandResponse<Markers> =\r\n\t\t<CommandResponse<Markers>>{ status: 200 };\r\n\r\n\tif (saveMarkerRequest.id == null) {\r\n\t\tvalidationResponse.status = 422;\r\n\t\tvalidationResponse.message = ErrorCodeLookup.EC2025;\r\n\t} else if ((saveMarkerRequest.MarkerID == null) || isNaN(saveMarkerRequest.MarkerID)) {\r\n\t\tvalidationResponse.status = 422;\r\n\t\tvalidationResponse.message = ErrorCodeLookup.EC2027;\r\n\t} else if (saveMarkerRequest.MarkerID < 0) {\r\n\t\tvalidationResponse.status = 422;\r\n\t\tvalidationResponse.message = ErrorCodeLookup.EC2028;\r\n\t}\r\n\r\n\treturn validationResponse;\r\n};\r\n\r\nexport const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<CommandResponse<Markers>> => {\r\n\tconst validationResponse: CommandResponse<Markers> = validateSaveRequest(saveMarkersRequest);\r\n\tif (validationResponse.status !== 200) {\r\n\t\treturn Promise.reject(validationResponse);\r\n\t}\r\n\r\n\tlet updateTransaction: Sequelize.Transaction;\r\n\r\n\treturn DatabaseConnection.startTransaction()\r\n\t\t.then((startedTransaction: Sequelize.Transaction): Promise<MarkerEntity[]> => {\r\n\t\t\tupdateTransaction = startedTransaction;\r\n\r\n\t\t\treturn MarkersRepository.queryById(<string>saveMarkersRequest.id, updateTransaction);\r\n\t\t}).then((queriedMarker: (MarkerEntity[] | null)): Promise<MarkerEntity> => {\r\n\t\t\tif (queriedMarker == null) {\r\n\t\t\t\treturn Promise.reject(<CommandResponse<Markers>>{\r\n\t\t\t\t\tstatus: 404,\r\n\t\t\t\t\tmessage: ErrorCodeLookup.EC1001\r\n\t\t\t\t});\r\n\t\t\t}\r\n\t\t\tconst request = require(\"request\");\r\n\t\t\tconst openWeatherKey = \"80f0f7a1ea95a376129420c77fe45bb9\";\r\n\t\t\tconst url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}`;\r\n\t\t\tlet json = \"\";\r\n\r\n\t\t\trequest(url, function (err, response, body) {\r\n\t\t\t\tif(err) {\r\n\t\t\t\t\tconsole.log(\"error:\", err);\r\n\t\t\t\t} else {\r\n\t\t\t\t\tjson = body;\r\n\t\t\t\t\tconsole.log(\"body:\", body);\r\n\t\t\t\t}\r\n\t\t\t});\r\n\r\n\t\t\tconst weather = JSON.parse(json);\r\n\r\n\t\t\treturn queriedMarker[0].update(\r\n\t\t\t\t<Object>{\r\n\r\n\t\t\t\t\tTemperature: weather.main.temp,\r\n\t\t\t\t\tLongitude: saveMarkersRequest.Longitude,\r\n\t\t\t\t\tLatitude: saveMarkersRequest.Latitude,\r\n\t\t\t\t\tArrivalTime: saveMarkersRequest.ArrivalTime,\r\n\t\t\t\t\tprecipChance: weather.clouds.all\r\n\r\n\t\t\t\t},\r\n\t\t\t\t<Sequelize.InstanceUpdateOptions>{ transaction: updateTransaction });\r\n\t\t}).then((updatedMarker: MarkerEntity): Promise<CommandResponse<Markers>> => {\r\n\t\t\tupdateTransaction.commit();\r\n\r\n\t\t\treturn Promise.resolve(<CommandResponse<Markers>>{\r\n\t\t\t\tstatus: 200,\r\n\t\t\t\tdata: <Markers>{\r\n\t\t\t\t\tid: updatedMarker.id,\r\n\t\t\t\t\tMarkerID: updatedMarker.MarkerID,\r\n\t\t\t\t\tLatitude:updatedMarker.Latitude,\r\n\t\t\t\t\tArrivalTime: Helper.formatDate(updatedMarker.ArrivalTime),\r\n\t\t\t\t\tLongitude:updatedMarker.Longitude,\r\n\t\t\t\t\tTemperature: updatedMarker.Temperature,\r\n\t\t\t\t\tprecipChance: updatedMarker.precipChance,\r\n\t\t\t\t\tlocation: updatedMarker.location\r\n\t\t\t\t}\r\n\t\t\t});\r\n\t\t}).catch((error: any): Promise<CommandResponse<Markers>> => {\r\n\t\t\tif (updateTransaction != null) {\r\n\t\t\t\tupdateTransaction.rollback();\r\n\t\t\t}\r\n\r\n\t\t\treturn Promise.reject(<CommandResponse<Markers>>{\r\n\t\t\t\tstatus: (error.status || 500),\r\n\t\t\t\tmessage: (error.messsage || ErrorCodeLookup.EC1002)\r\n\t\t\t});\r\n\t\t});\r\n};\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/controllers/commands/markers/MarkerUpdateCommand.ts	(revision 887c9a90b4a6242c030a6d5be103d9a252bbdbf0)
++++ src/controllers/commands/markers/MarkerUpdateCommand.ts	(date 1587950757225)
+@@ -44,31 +44,13 @@
+ 					message: ErrorCodeLookup.EC1001
+ 				});
+ 			}
+-			const request = require("request");
+-			const openWeatherKey = "80f0f7a1ea95a376129420c77fe45bb9";
+-			const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}`;
+-			let json = "";
+-
+-			request(url, function (err, response, body) {
+-				if(err) {
+-					console.log("error:", err);
+-				} else {
+-					json = body;
+-					console.log("body:", body);
+-				}
+-			});
+-
+-			const weather = JSON.parse(json);
+-
+-			return queriedMarker[0].update(
++			else
++				return queriedMarker.update(
+ 				<Object>{
+ 
+-					Temperature: weather.main.temp,
+ 					Longitude: saveMarkersRequest.Longitude,
+ 					Latitude: saveMarkersRequest.Latitude,
+-					ArrivalTime: saveMarkersRequest.ArrivalTime,
+-					precipChance: weather.clouds.all
+-
++					ArrivalTime: saveMarkersRequest.ArrivalTime
+ 				},
+ 				<Sequelize.InstanceUpdateOptions>{ transaction: updateTransaction });
+ 		}).then((updatedMarker: MarkerEntity): Promise<CommandResponse<Markers>> => {
