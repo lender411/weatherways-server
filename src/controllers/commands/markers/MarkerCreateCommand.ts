@@ -86,6 +86,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 			}
 
 			return Promise.reject(<CommandResponse<Markers>>{
+				console: "it breaks in create",
 				status: (error.status || 500),
 				message: (error.message || ErrorCodeLookup.EC1002)
 			});
