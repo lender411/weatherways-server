@@ -103,6 +103,7 @@ export const updateMarker = async (req: restify.Request, res: restify.Response, 
 	saveMarker(req, res, next, MarkerUpdateCommand.execute);
 };
 
+
 export const deleteMarker = async (req: restify.Request, res: restify.Response, next: restify.Next) => {
 	MarkerDeleteCommand.execute(req.params[ParameterLookup.id])
 		.then((markerDeleteCommandResponse: CommandResponse<void>) => {
