@@ -33,19 +33,20 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	const request = require("request");
 	const openWeatherKey = "80f0f7a1ea95a376129420c77fe45bb9";
 	const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}&units=imperial`;
-    let object = "";
-	request(url, function (err, response, body) {
+    let json = "";
+	json = request(url, function (err, response, body) {
 		if(err) {
 			console.log("error:", err);
 		} else {
-			object = body;
+			json = body;
+			return json;
 			// console.log("body:", body);
 		}
 	});
-	console.log("json", object);
-	const weather = JSON.parse(object);
 
-	console.log("it breaks in create3", object);
+	console.log("json:", json);
+	const weather = JSON.parse(json);
+	console.log("it breaks in create3", json);
 	// sends current data not arrival time data
 	// sends cloud cover instead of precipitation chance because I cant find it in the messages anymore
 	const markerToCreate: MarkerEntity = <MarkerEntity>{
@@ -64,7 +65,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	return DatabaseConnection.startTransaction() 
 		.then((createdTransaction: Sequelize.Transaction): Promise<MarkerEntity> => {
 			createMarker = createdTransaction;
-			console.log("it breaks in create2", object);
+			console.log("it breaks in create2", json);
 			return MarkersRepository.created(markerToCreate, createMarker);
 		}).then((createdMarker: MarkerEntity): Promise<CommandResponse<Markers>> => {
 			createMarker.commit();
@@ -85,7 +86,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 		}).catch((error: any): Promise<CommandResponse<Markers>> => {
 			if (createMarker != null) {
 
-				console.log("it breaks in create", object);
+				console.log("it breaks in create", json);
 				createMarker.rollback();
 
 					}
