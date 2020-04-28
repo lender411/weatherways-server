@@ -34,7 +34,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	}
 
 	let updateTransaction: Sequelize.Transaction;
-
+	let json = "";
 	return DatabaseConnection.startTransaction()
 		.then((startedTransaction: Sequelize.Transaction): Promise<MarkersModel | null> => {
 			updateTransaction = startedTransaction;
@@ -51,7 +51,6 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 				const request = require("request");
 				const openWeatherKey = "80f0f7a1ea95a376129420c77fe45bb9";
 				const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}&units=imperial`;
-				let json = "";
 
 				request(url, function (err, response, body) {
 					if(err) {
