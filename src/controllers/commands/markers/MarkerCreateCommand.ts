@@ -49,7 +49,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	function delay (ms: number) {
 		return new Promise(resolve => setTimeout(resolve, ms));
 	}
-	await delay(5000);
+	await delay(2000);
 	console.log("json:", json);
 	const weather = JSON.parse(json);
 	console.log("it breaks in create3", json);
