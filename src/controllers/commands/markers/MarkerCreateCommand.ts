@@ -37,23 +37,21 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	const request = require("request");
 	const openWeatherKey = "80f0f7a1ea95a376129420c77fe45bb9";
 	const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}&units=imperial`;
+	const json = "";
 
-	const promise1 = new Promise((resolve, reject) => {
-		request(url, (err, response, body) => {
-			if (err) {
-				console.log("error:", err);
-				reject(err);
-			} else {
-				resolve(body);
-				json = body
-				console.log("\n\nbody:", body);
-			}
-		});
+	request(url, (err, response, body) => {
+		if (err) {
+			console.log("error:", err);
+			return Promise.reject(err);
+		} else {
+			console.log("\n\nbody:", body);
+			return Promise.resolve(body);
+		}
 	});
 
-	promise1.then((json) => {
-		console.log("\n\njson:", json);
-	});
+
+	console.log("\n\njson:", json);
+	const weather = JSON.parse(json);
 
 	const markerToCreate: MarkersModel = <MarkersModel>{
 		id:saveMarkersRequest.id,
@@ -69,7 +67,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 
 	let createTransaction: Sequelize.Transaction;
 
-	return DatabaseConnection.startTransaction() 
+	return DatabaseConnection.startTransaction()
 		.then((createdTransaction: Sequelize.Transaction): Promise<MarkersModel | null> => {
 			createTransaction = createdTransaction;
 
