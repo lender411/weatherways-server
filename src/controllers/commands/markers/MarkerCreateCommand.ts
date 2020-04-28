@@ -83,7 +83,8 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 		}).catch((error: any): Promise<CommandResponse<Markers>> => {
 			if (createMarker != null) {
 				createMarker.rollback();
-			}
+				console.log("it breaks in create", object);
+					}
 
 			return Promise.reject(<CommandResponse<Markers>>{
 				console: "it breaks in create",
