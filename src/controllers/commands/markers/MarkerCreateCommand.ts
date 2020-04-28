@@ -55,7 +55,6 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 		Longitude: saveMarkersRequest.Longitude,
 		location: saveMarkersRequest.location,
 		ArrivalTime: saveMarkersRequest.ArrivalTime
-
 	};
 
 	console.log("it breaks in create3", object);
