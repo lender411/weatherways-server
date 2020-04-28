@@ -36,7 +36,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}&units=imperial`;
     let json = "";
 	request(url, function (err, response, body) {
-		if(err) {
+		if (err) {
 			console.log("error:", err);
 			return null;
 		} else {
@@ -44,7 +44,12 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 			return json;
 			// console.log("body:", body);
 
-
+		}
+	});
+	function delay (ms: number) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+	await delay(5000);
 	console.log("json:", json);
 	const weather = JSON.parse(json);
 	console.log("it breaks in create3", json);
@@ -98,6 +103,4 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 				message: (error.message || ErrorCodeLookup.EC1002)
 			});
 		});
-		}
-	});
 };
