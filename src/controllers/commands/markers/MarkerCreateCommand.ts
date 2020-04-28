@@ -38,13 +38,13 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	const openWeatherKey = "80f0f7a1ea95a376129420c77fe45bb9";
 	const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}&units=imperial`;
 
-	const json = new Promise((reslove, reject) => {
+	const json = new Promise((resolve, reject) => {
 		request(url, (err, response, body) => {
 			if (err) {
 				console.log("error:", err);
 				reject(err);
 			} else {
-				reslove(body);
+				resolve(body);
 				console.log("\n\nbody:", body);
 			}
 		});
