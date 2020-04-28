@@ -34,7 +34,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	}
 
 	let updateTransaction: Sequelize.Transaction;
-	let json = "";
+	var json = "";
 	return DatabaseConnection.startTransaction()
 		.then((startedTransaction: Sequelize.Transaction): Promise<MarkersModel | null> => {
 			updateTransaction = startedTransaction;
