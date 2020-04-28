@@ -39,17 +39,19 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}&units=imperial`;
 	var json = ""; //not a const anymore
 
-	json = request(url, function (err, response, body) {
-		if(err) {
-			console.log("error:", err);
-		} else {
-			json = body;
-			return json;
-			//console.log("body:", body);
-		}
+	json = Promise((reslove, reject) => {
+		request(url, function (err, response, body) {
+			if (err) {
+				console.log("error:", err);
+				reject(err);
+			} else {
+				reslove(body);
+				console.log("\n\nbody:", body);
+			}
+		});
 	});
 
-	console.log("json:", json);
+	console.log("\n\njson:", json);
 	const weather = JSON.parse(json);
 
 	const markerToCreate: MarkersModel = <MarkersModel>{
