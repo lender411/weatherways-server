@@ -42,7 +42,8 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 			json = body;
 			return json;
 			// console.log("body:", body);
-
+		}
+		});
 
 	console.log("json:", json);
 	const weather = JSON.parse(json);
@@ -97,6 +98,5 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 				message: (error.message || ErrorCodeLookup.EC1002)
 			});
 		});
-		}
-	});
 };
+
