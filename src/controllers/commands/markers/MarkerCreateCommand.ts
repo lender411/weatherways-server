@@ -58,11 +58,13 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 
 	};
 
+	console.log("it breaks in create3", object);
 	let createMarker: Sequelize.Transaction;
 
 	return DatabaseConnection.startTransaction() 
 		.then((createdTransaction: Sequelize.Transaction): Promise<MarkerEntity> => {
 			createMarker = createdTransaction;
+			console.log("it breaks in create2", object);
 			return MarkersRepository.created(markerToCreate, createMarker);
 		}).then((createdMarker: MarkerEntity): Promise<CommandResponse<Markers>> => {
 			createMarker.commit();
@@ -82,9 +84,10 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 			});
 		}).catch((error: any): Promise<CommandResponse<Markers>> => {
 			if (createMarker != null) {
-				createMarker.rollback();
 
 				console.log("it breaks in create", object);
+				createMarker.rollback();
+
 					}
 
 			return Promise.reject(<CommandResponse<Markers>>{
