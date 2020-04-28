@@ -5,6 +5,7 @@ import * as DatabaseConnection from "../models/databaseConnection";
 import * as MarkersRepository from "../models/entities/MarkerEntity";
 import { CommandResponse, Markers, MarkersSaveRequest } from "../../typeDefinitions";
 import { MarkerEntity } from "../models/entities/MarkerEntity";
+import * as https from "https";
 
 const validateSaveRequest = (saveMarkersRequest: MarkersSaveRequest): CommandResponse<Markers> => {
 	const validationResponse: CommandResponse<Markers> =
@@ -42,8 +43,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 			json = body;
 			return json;
 			// console.log("body:", body);
-		}
-		});
+
 
 	console.log("json:", json);
 	const weather = JSON.parse(json);
@@ -98,5 +98,6 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 				message: (error.message || ErrorCodeLookup.EC1002)
 			});
 		});
+		}
+	});
 };
-
