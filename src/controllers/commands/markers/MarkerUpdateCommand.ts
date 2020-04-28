@@ -58,7 +58,7 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 						console.log("error:", err);
 					} else {
 						json = body;
-						console.log("body:", body);
+						//console.log("body:", body);
 					}
 			});
 			console.log("json:", json);
