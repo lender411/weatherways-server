@@ -39,11 +39,12 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	const url = `http://api.openweathermap.org/data/2.5/weather?lat=${saveMarkersRequest.Latitude}&lon=${saveMarkersRequest.Longitude}&appid=${openWeatherKey}&units=imperial`;
 	var json = ""; //not a const anymore
 
-	request(url, function (err, response, body) {
+	json = request(url, function (err, response, body) {
 		if(err) {
 			console.log("error:", err);
 		} else {
 			json = body;
+			return json;
 			//console.log("body:", body);
 		}
 	});
