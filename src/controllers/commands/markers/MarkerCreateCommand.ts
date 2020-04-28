@@ -44,6 +44,8 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 	});
 	console.log("json", object);
 	const weather = JSON.parse(object);
+
+	console.log("it breaks in create3", object);
 	// sends current data not arrival time data
 	// sends cloud cover instead of precipitation chance because I cant find it in the messages anymore
 	const markerToCreate: MarkerEntity = <MarkerEntity>{
@@ -57,7 +59,6 @@ export const execute = async (saveMarkersRequest: MarkersSaveRequest): Promise<C
 		ArrivalTime: saveMarkersRequest.ArrivalTime
 	};
 
-	console.log("it breaks in create3", object);
 	let createMarker: Sequelize.Transaction;
 
 	return DatabaseConnection.startTransaction() 
